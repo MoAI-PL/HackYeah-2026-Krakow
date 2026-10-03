@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>RCB SIGNAL — prezentacja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500;700&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  @page { size: 1280px 720px; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #d9d9d9; }
+  body { font-family: "Hind", "Segoe UI", Arial, sans-serif; color: #111; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .slide { width: 1280px; height: 720px; position: relative; overflow: hidden; background: #fff; margin: 0 auto 24px; page-break-after: always; break-after: page; }
+  @media print { body { background: #fff; } .slide { margin: 0; } }
+
+  /* tła */
+  .wash { position: absolute; border-radius: 50%; pointer-events: none; }
+  .blob { position: absolute; pointer-events: none; }
+
+  /* logo i linie */
+  .logo { position: absolute; left: 72px; top: 26px; display: flex; align-items: center; gap: 12px; font: 500 17px/1 "Hind", sans-serif; letter-spacing: 0.08em; z-index: 3; }
+  .rule { position: absolute; height: 2px; background: #111; z-index: 3; }
+  .vrule { position: absolute; width: 2px; background: #111; z-index: 3; }
+  h1, h2 { font-family: "Roboto Mono", ui-monospace, monospace; font-weight: 700; margin: 0; letter-spacing: -0.02em; text-transform: uppercase; line-height: 1.05; z-index: 3; position: relative; }
+  .h-xl { font-size: 54px; }
+  .h-lg { font-size: 52px; }
+  .content { position: absolute; z-index: 3; }
+  p { margin: 0; }
+  .body { font-size: 20px; line-height: 1.45; }
+  .small { font-size: 15px; line-height: 1.45; }
+  .mono { font-family: "Roboto Mono", monospace; }
+  b, strong { font-weight: 600; }
+
+  /* wiersze rozdzielone liniami (jak w szablonie) */
+  .rows > div { padding: 16px 0; border-top: 2px solid #111; }
+  .rows > div:last-child { border-bottom: 2px solid #111; }
+
+  /* tabela w stylu „Stan prawny” */
+  table.grid { border-collapse: collapse; width: 100%; }
+  table.grid th { background: #000; color: #fff; font: 500 19px/1.2 "Hind", sans-serif; padding: 16px 14px; border: 2px solid #000; }
+  table.grid td { border: 2px solid #000; padding: 12px 16px; font-size: var(--fs, 15.5px); line-height: 1.4; vertical-align: middle; background: #fff; }
+  table.grid.big td { padding: 26px 20px; }
+  table.grid td.lab { background: #c9c3ff; font-size: 17px; text-align: center; }
+
+  /* SMS */
+  .sms { border-radius: 16px 16px 16px 4px; padding: 14px 16px; font: 500 16px/1.45 "Roboto Mono", monospace; }
+  .score { font: 700 44px/1 "Roboto Mono", monospace; }
+  .pill { display: inline-block; font: 700 12px/1 "Roboto Mono", monospace; letter-spacing: 0.06em; padding: 6px 8px; border: 1.5px solid #111; border-radius: 3px; text-transform: uppercase; }
+
+  .shot { border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(20, 10, 80, 0.18); border: 1px solid #ddd; background: #fff; }
+  .shot img { display: block; width: 100%; }
+
+  /* oś czasu */
+  .tl { position: absolute; left: 72px; right: 72px; top: 270px; height: 2px; background: #111; z-index: 3; }
+  .tl-item { position: absolute; width: 138px; z-index: 3; }
+  .tl-item .dot { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 3px solid #111; margin-bottom: 14px; }
+  .tl-item .t { font: 700 20px/1 "Roboto Mono", monospace; margin-bottom: 8px; }
+  .tl-item .d { font-size: 15px; line-height: 1.35; }
+
+  .card { position: absolute; background: #fff; border-radius: 14px; box-shadow: 0 8px 26px rgba(30, 10, 90, 0.16); overflow: hidden; z-index: 3; }
+</style>
+</head>
+<body>
+
+<!-- wspólne gradienty -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="gBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1200ff"/><stop offset="0.55" stop-color="#8b2cf0"/><stop offset="1" stop-color="#ff6b8b"/>
+    </linearGradient>
+    <linearGradient id="gBlue2" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1200ff"/><stop offset="0.6" stop-color="#9a35e8"/><stop offset="1" stop-color="#ff5c7c"/>
+    </linearGradient>
+    <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8f0036"/><stop offset="0.5" stop-color="#d1004a"/><stop offset="1" stop-color="#9b5cff"/>
+    </linearGradient>
+    <linearGradient id="gPink" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff4f7b"/><stop offset="0.5" stop-color="#b52cd9"/><stop offset="1" stop-color="#2a00ff"/>
+    </linearGradient>
+    <symbol id="b1" viewBox="0 0 200 200"><path transform="translate(100 100)" d="M44,-58C57,-47,67,-33,72,-16C77,1,76,20,67,35C58,50,41,61,22,68C3,75,-18,78,-36,71C-54,64,-69,47,-74,28C-79,9,-74,-12,-64,-29C-54,-46,-39,-59,-22,-67C-5,-75,15,-78,29,-71Z"/></symbol>
+    <symbol id="b2" viewBox="0 0 200 200"><path transform="translate(100 100)" d="M38,-49C49,-38,57,-25,63,-9C69,7,72,26,64,39C56,52,37,59,18,65C-1,71,-20,76,-36,69C-52,62,-65,43,-70,23C-75,3,-72,-18,-62,-34C-52,-50,-35,-61,-17,-66C1,-71,27,-60,38,-49Z"/></symbol>
+    <symbol id="b3" viewBox="0 0 400 300" preserveAspectRatio="none"><path d="M0,0 L400,0 C390,60 340,90 270,100 C190,112 160,140 140,200 C118,262 70,300 0,290 Z"/></symbol>
+    <symbol id="b4" viewBox="0 0 400 300" preserveAspectRatio="none"><path d="M400,300 L0,300 C20,250 70,215 150,210 C240,204 270,170 300,110 C330,50 370,10 400,0 Z"/></symbol>
+    <symbol id="edgeR" viewBox="0 0 300 450" preserveAspectRatio="none"><path d="M300,0 L300,450 C262,430 240,360 214,280 C188,200 150,110 96,52 C66,22 30,6 0,0 Z"/></symbol>
+    <symbol id="edgeL" viewBox="0 0 300 450" preserveAspectRatio="none"><path d="M0,450 L0,0 C36,40 70,120 108,210 C146,300 196,392 300,450 Z"/></symbol>
+    <symbol id="logo" viewBox="0 0 40 44">
+      <path d="M20 2 L37 8 C37 24 31 35 20 42 C9 35 3 24 3 8 Z" fill="none" stroke="#111" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M9 23 L14 23 L17 15 L21 30 L24 20 L26 23 L31 23" fill="none" stroke="#111" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============================================================ 1. TYTUŁ -->
+<section class="slide">
+  <svg class="blob" style="left:-60px;top:-70px;width:420px;height:330px"><use href="#b3" fill="url(#gBlue)"/></svg>
+  <svg class="blob" style="left:420px;top:20px;width:170px;height:170px"><use href="#b2" fill="url(#gBlue2)"/></svg>
+  <div class="wash" style="right:-260px;top:-300px;width:900px;height:760px;background:radial-gradient(closest-side, rgba(255,90,150,.55), rgba(255,140,190,.25) 55%, transparent)"></div>
+  <svg class="blob" style="right:-120px;top:-40px;width:430px;height:430px"><use href="#b1" fill="url(#gRed)"/></svg>
+  <svg class="blob" style="right:260px;top:80px;width:130px;height:130px"><use href="#b2" fill="url(#gPink)"/></svg>
+  <svg class="blob" style="left:-80px;bottom:-110px;width:560px;height:300px"><use href="#b4" fill="url(#gBlue)" transform="scale(-1,1) translate(-560,0)"/></svg>
+  <svg class="blob" style="right:-60px;bottom:-120px;width:520px;height:380px"><use href="#b4" fill="url(#gRed)"/></svg>
+  <svg class="blob" style="left:690px;bottom:40px;width:110px;height:140px"><use href="#b1" fill="url(#gRed)"/></svg>
+
+  <div class="logo" style="left:132px;top:150px"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
+  <div class="rule" style="left:132px;top:215px;width:770px"></div>
+  <div class="content" style="left:132px;top:248px;width:800px">
+    <h1 style="font-size:50px;line-height:1.12">Warstwa decyzyjna<br>dla systemu<br>ostrzegania ludności</h1>
+  </div>
+  <div class="rule" style="left:132px;top:462px;width:770px"></div>
+  <div class="content" style="left:132px;top:484px;width:820px">
+    <p class="body" style="font-size:19px">Jan Domański · Jakub Goleman · Krystian Góźdź · Maks Kozieł · Piotr Niemiec</p>
+    <p class="small mono" style="margin-top:10px;font-size:13px;letter-spacing:.06em;color:#333">ZESPÓŁ MoAI · HACKYEAH 2026 · OPEN TASK: DEFENCE</p>
+  </div>
+</section>
+
+<!-- ============================================================ 2. DLACZEGO -->
+<section class="slide">
+  <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
+  <div class="rule" style="left:72px;top:76px;width:580px"></div>
+  <div class="wash" style="left:-220px;bottom:-260px;width:620px;height:560px;background:radial-gradient(closest-side, rgba(90,70,255,.7), rgba(150,130,255,.3) 55%, transparent)"></div>
+  <div class="content" style="left:72px;top:140px;width:580px">
+    <h1 class="h-xl">Dlaczego<br>to ważne?</h1>
+  </div>
+  <div class="content rows" style="left:72px;top:316px;width:580px">
+    <div><p class="body" style="font-size:18.5px">Alert RCB trafia do wszystkich telefonów w obszarze zagrożenia. Ma sens tylko wtedy, gdy odbiorca <b>zrozumie, uwierzy i wie, co zrobić</b>.</p></div>
+    <div><p class="body" style="font-size:18.5px">Dyżurny działa pod presją czasu: meldunki IMGW, PSP i WCZK przychodzą osobno, a SMS to <b>160 znaków, bez polskich liter</b>, z dokładnością do powiatu.</p></div>
+    <div><p class="body" style="font-size:18.5px">Komunikat ogólny, bez instrukcji lub nieaktualny osłabia zaufanie do kolejnych ostrzeżeń (<i>alert fatigue</i>).</p></div>
+  </div>
+  <!-- prawa strona: przykład słabego alertu -->
+  <div class="content" style="left:720px;top:0;width:560px;height:720px;background:linear-gradient(160deg,#1a00ff 0%,#7b2ff0 45%,#ff5f8a 100%)">
+    <div style="position:absolute;left:90px;top:110px;width:380px;height:520px;border-radius:44px;background:#0d0d18;padding:14px;box-shadow:0 30px 60px rgba(0,0,0,.35)">
+      <div style="width:100%;height:100%;border-radius:32px;background:#f4f5f8;padding:46px 22px 22px">
+        <div class="mono" style="font-size:12px;letter-spacing:.1em;color:#666;margin-bottom:10px">ALERT RCB · TERAZ</div>
+        <div class="sms" style="background:#fff;border:1px solid #ddd">Alert RCB: Dzis wieczorem intensywne opady deszczu w powiecie nadrzeczanskim. Mozliwe lokalne podtopienia. Zachowaj ostroznosc.</div>
+        <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px">
+          <div class="pill" style="border-color:#c01a2e;color:#c01a2e;align-self:flex-start">Do kiedy?</div>
+          <div class="pill" style="border-color:#c01a2e;color:#c01a2e;align-self:flex-start">Co mam zrobić?</div>
+          <div class="pill" style="border-color:#1d7a3c;color:#1d7a3c;align-self:flex-start">Co i gdzie — OK</div>
+        </div>
+        <div class="small" style="margin-top:22px;color:#444">Przykładowy projekt komunikatu (dane syntetyczne)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 3. KTO -->
+<section class="slide">
+  <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
+  <div class="rule" style="left:72px;top:76px;width:1060px"></div>
+  <div class="rule" style="left:72px;top:672px;width:1060px"></div>
+  <div class="vrule" style="left:470px;top:76px;height:596px"></div>
+  <svg class="blob" style="right:0;top:0;width:150px;height:440px"><use href="#edgeR" fill="url(#gPink)"/></svg>
+  <div class="wash" style="left:-200px;bottom:-240px;width:560px;height:520px;background:radial-gradient(closest-side, rgba(110,80,255,.55), transparent)"></div>
+  <svg class="blob" style="left:0;bottom:0;width:220px;height:300px"><use href="#edgeL" fill="url(#gBlue)"/></svg>
+  <div class="content" style="left:72px;top:240px;width:380px;text-align:center">
+    <h1 class="h-xl">Kto<br>korzysta?</h1>
+    <p class="body" style="margin-top:22px;font-size:18px">Narzędzie dla RCB.<br><b>Nie kolejna aplikacja<br>dla obywatela.</b></p>
+  </div>
+  <div class="content" style="left:510px;top:196px;width:600px;display:grid;grid-template-columns:1fr 1fr;gap:64px 44px;text-align:center">
+    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:600">Dyżurny RCB</h3><p class="body" style="font-size:17.5px">Jeden obraz sytuacji zamiast wielu meldunków. Kontrola jakości komunikatu przed wysyłką.</p></div>
+    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:600">Służby źródłowe</h3><p class="body" style="font-size:17.5px">IMGW, PSP, WCZK — ich meldunki są łączone we wspólne zdarzenie i weryfikowane.</p></div>
+    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:600">Obywatel</h3><p class="body" style="font-size:17.5px">Korzysta pośrednio: dostaje krótszy, konkretny SMS z instrukcją. Bez instalowania czegokolwiek.</p></div>
+    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:600">Kierownictwo</h3><p class="body" style="font-size:17.5px">Raport po każdym zdarzeniu i mierzalna jakość ostrzegania, z pełnym dziennikiem decyzji.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ 4. ARCHITEKTURA -->
+<section class="slide">
+  <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
+  <div class="rule" style="left:72px;top:76px;width:1060px"></div>
+  <div class="rule" style="left:72px;top:672px;width:1060px"></div>
+  <div class="vrule" style="left:470px;top:76px;height:596px"></div>
+  <svg class="blob" style="right:0;top:0;width:150px;height:440px"><use href="#edgeR" fill="url(#gPink)"/></svg>
+  <div class="wash" style="left:-200px;bottom:-240px;width:560px;height:520px;background:radial-gradient(closest-side, rgba(110,80,255,.5), transparent)"></div>
+  <svg class="blob" style="left:0;bottom:0;width:220px;height:300px"><use href="#edgeL" fill="url(#gBlue)"/></svg>
+  <div class="content" style="left:40px;top:250px;width:420px;text-align:center">
+    <h1 style="font-size:46px">Architektura<br>rozwiązania</h1>
+    <p class="body" style="margin-top:22px;font-size:18px">Zamknięta pętla:<br>każdy alert uczy system,<br>jak przygotować następny.</p>
+  </div>
+  <div class="content" style="left:520px;top:122px;width:580px">
+    <!-- moduły -->
+    <div style="display:flex;flex-direction:column;gap:24px">
+      <div style="display:grid;grid-template-columns:62px 1fr;gap:18px;align-items:center">
+        <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="29" fill="#2a00ff"/><text x="31" y="38" text-anchor="middle" font-family="Roboto Mono" font-weight="700" font-size="20" fill="#fff">01</text></svg>
+        <div><div class="mono" style="font-weight:700;font-size:18px;color:#2a00ff">SIGNAL INTELLIGENCE</div><div class="small" style="font-size:16px">Łączy meldunki IMGW, PSP i WCZK w jedno zdarzenie. Oznacza źródła niezweryfikowane.</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:62px 1fr;gap:18px;align-items:center">
+        <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="29" fill="#6b1ff0"/><text x="31" y="38" text-anchor="middle" font-family="Roboto Mono" font-weight="700" font-size="20" fill="#fff">02</text></svg>
+        <div><div class="mono" style="font-weight:700;font-size:18px;color:#6b1ff0">SIGNAL GEO</div><div class="small" style="font-size:16px">Porównuje obszar zagrożenia z obszarem alertu (powiaty). Wskazuje luki w pokryciu.</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:62px 1fr;gap:18px;align-items:center">
+        <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="29" fill="#b52cd9"/><text x="31" y="38" text-anchor="middle" font-family="Roboto Mono" font-weight="700" font-size="20" fill="#fff">03</text></svg>
+        <div><div class="mono" style="font-weight:700;font-size:18px;color:#b52cd9">SIGNAL WRITER</div><div class="small" style="font-size:16px">Sprawdza komunikat: co, gdzie, kiedy, co zrobić, limit 160 znaków, spójność ze źródłami.</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:62px 1fr;gap:18px;align-items:center">
+        <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="29" fill="#e83a78"/><text x="31" y="38" text-anchor="middle" font-family="Roboto Mono" font-weight="700" font-size="20" fill="#fff">04</text></svg>
+        <div><div class="mono" style="font-weight:700;font-size:18px;color:#d0185f">SIGNAL COMMAND</div><div class="small" style="font-size:16px">Panel dyżurnego. <b>AI rekomenduje, człowiek decyduje</b> — zatwierdzenie z uzasadnieniem.</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:62px 1fr;gap:18px;align-items:center">
+        <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="29" fill="#c01a2e"/><text x="31" y="38" text-anchor="middle" font-family="Roboto Mono" font-weight="700" font-size="20" fill="#fff">05</text></svg>
+        <div><div class="mono" style="font-weight:700;font-size:18px;color:#c01a2e">SIGNAL FEEDBACK</div><div class="small" style="font-size:16px">Wykrywa zmianę sytuacji, rekomenduje aktualizację, tworzy raport po zdarzeniu.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 5. WRITER -->
+<section class="slide">
+  <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
+  <div class="rule" style="left:72px;top:76px;width:1136px"></div>
+  <div class="wash" style="right:-200px;top:-260px;width:620px;height:520px;background:radial-gradient(closest-side, rgba(255,90,130,.45), transparent)"></div>
+  <div class="content" style="left:72px;top:112px;width:1136px;display:flex;justify-content:space-between;align-items:flex-end">
+    <h1 class="h-lg">Kontrola jakości alertu</h1>
+    <p class="body" style="font-size:19px;text-align:right">Nie generator tekstu —<br><b>sprawdzian przed wysyłką</b></p>
+  </div>
+  <!-- przed / po -->
+  <div class="content" style="left:72px;top:218px;width:540px">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px"><span class="score" style="color:#a15800">78</span><span class="mono" style="font-size:13px;letter-spacing:.08em">/ 100 · PROJEKT</span></div>
+    <div class="sms" style="background:#fff4e0;border:1.5px solid #e2b56b;font-size:14.5px">Alert RCB: Dzis wieczorem intensywne opady deszczu w powiecie nadrzeczanskim. Mozliwe lokalne podtopienia. <u>Zachowaj ostroznosc.</u></div>
+    <p class="small" style="margin-top:8px;color:#7a4200">Brak godziny zakończenia · instrukcja zbyt ogólna</p>
+    <div style="display:flex;align-items:center;gap:14px;margin:20px 0 10px"><span class="score" style="color:#1d7a3c">92</span><span class="mono" style="font-size:13px;letter-spacing:.08em">/ 100 · PO REKOMENDACJI SIGNAL</span></div>
+    <div class="sms" style="background:#e6f3ea;border:1.5px solid #a9d6b7;font-size:14.5px">Alert RCB: <u>Do 22:00</u> intensywne opady i podtopienia w pow. nadrzeczanskim. <u>Nie wjezdzaj na zalane drogi. Przenies cenne rzeczy wyzej.</u> Zagrozenie zycia: 112</div>
+    <p class="small" style="margin-top:8px;color:#155d2d">154/160 znaków · bez polskich liter · operator może dalej edytować</p>
+  </div>
+  <!-- kryteria -->
+  <div class="content" style="left:660px;top:218px;width:548px">
+    <table class="grid">
+      <tr><th style="width:44%">Kryterium</th><th style="width:20%">Waga</th><th>Pytanie</th></tr>
+      <tr><td class="mono"><b>WHAT</b></td><td style="text-align:center">12</td><td>Co się dzieje?</td></tr>
+      <tr><td class="mono"><b>WHERE</b></td><td style="text-align:center">15</td><td>Gdzie?</td></tr>
+      <tr><td class="mono"><b>WHEN</b></td><td style="text-align:center">15</td><td>Od kiedy i do kiedy?</td></tr>
+      <tr><td class="mono"><b>ACTION</b></td><td style="text-align:center">25</td><td>Co mam zrobić?</td></tr>
+      <tr><td class="mono"><b>LENGTH</b></td><td style="text-align:center">10</td><td>160 znaków, GSM-7</td></tr>
+      <tr><td class="mono"><b>CONSISTENCY</b></td><td style="text-align:center">15</td><td>Zgodne ze źródłami?</td></tr>
+      <tr><td class="mono"><b>CLARITY</b></td><td style="text-align:center">8</td><td>Bez skrótów?</td></tr>
+    </table>
+    <p class="small" style="margin-top:10px">Silnik regułowy: ten sam tekst = ten sam wynik. Ocenia konstrukcję komunikatu, nie prawdziwość informacji. Błędy blokujące (np. 173/160 znaków, brak instrukcji) uniemożliwiają zatwierdzenie.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 6. DEMO -->
+<section class="slide">
+  <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
+  <div class="rule" style="left:72px;top:76px;width:1136px"></div>
+  <div class="rule" style="left:72px;top:682px;width:1136px"></div>
+  <div class="wash" style="right:-200px;top:-260px;width:640px;height:520px;background:radial-gradient(closest-side, rgba(230,60,90,.5), transparent)"></div>
+  <div class="wash" style="left:-220px;bottom:-260px;width:600px;height:520px;background:radial-gradient(closest-side, rgba(230,70,90,.45), transparent)"></div>
+  <div class="content" style="left:72px;top:104px;width:760px">
+    <p class="body" style="font-size:18px"><u>github.com/MoAI-PL/HackYeah-2026-Krakow</u></p>
+    <p class="mono" style="font-size:14px;margin-top:6px;color:#333">Open Defence/RCB SIGNAL → <b>python3 server.py</b> → localhost:8080 → ▶ START DEMO</p>
+  </div>
+  <div class="content" style="right:72px;top:96px"><h1 style="font-size:70px">Demo</h1></div>
+  <div class="shot content" style="left:72px;top:188px;width:770px"><img src="img/writer-78.png" alt=""></div>
+  <div class="shot content" style="left:870px;top:188px;width:338px"><img src="img/map.png" alt=""></div>
+  <div class="shot content" style="left:870px;top:420px;width:338px"><img src="img/aar.png" alt=""></div>
+  <div class="content small" style="left:870px;top:640px;width:338px;font-size:13px;color:#333">Mapa SIGNAL GEO · raport po zdarzeniu</div>
+</section>
+
+<!-- ============================================================ 7. SCENARIUSZ -->
+<section class="slide">
+  <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
+  <div class="rule" style="left:72px;top:76px;width:1136px"></div>
+  <svg class="blob" style="left:-60px;bottom:-120px;width:420px;height:300px"><use href="#b4" fill="url(#gBlue)" transform="scale(-1,1) translate(-420,0)"/></svg>
+  <svg class="blob" style="right:-80px;bottom:-140px;width:460px;height:320px"><use href="#b4" fill="url(#gRed)"/></svg>
+  <div class="content" style="left:72px;top:112px;width:1136px;display:flex;justify-content:space-between;align-items:flex-end">
+    <h1 class="h-lg">Scenariusz: podtopienia</h1>
+    <p class="body" style="font-size:19px;text-align:right">Jedno zdarzenie,<br><b>cały cykl ostrzegania</b></p>
+  </div>
+  <div class="tl"></div>
+  <div class="tl-item" style="left:72px;top:261px"><div class="dot"></div><div class="t">17:42</div><div class="d">IMGW, PSP i WCZK zgłaszają opady i podtopienia</div></div>
+  <div class="tl-item" style="left:215px;top:261px"><div class="dot" style="border-color:#2a00ff;background:#2a00ff"></div><div class="t">17:56</div><div class="d">SIGNAL łączy 3 źródła w jedno zdarzenie</div></div>
+  <div class="tl-item" style="left:358px;top:261px"><div class="dot" style="border-color:#a15800"></div><div class="t">18:07</div><div class="d">Analiza projektu alertu: <b>78/100</b></div></div>
+  <div class="tl-item" style="left:501px;top:261px"><div class="dot" style="border-color:#1d7a3c;background:#1d7a3c"></div><div class="t">18:08</div><div class="d">Operator stosuje rekomendację: <b>92/100</b></div></div>
+  <div class="tl-item" style="left:644px;top:261px"><div class="dot" style="border-color:#1d7a3c;background:#1d7a3c"></div><div class="t">18:10</div><div class="d">Zatwierdzenie i symulowana dystrybucja</div></div>
+  <div class="tl-item" style="left:787px;top:261px"><div class="dot" style="border-color:#c01a2e;background:#c01a2e"></div><div class="t">18:32</div><div class="d">Zmiana sytuacji: pokrycie spada z 96% do 83%</div></div>
+  <div class="tl-item" style="left:930px;top:261px"><div class="dot" style="border-color:#1d7a3c;background:#1d7a3c"></div><div class="t">18:36</div><div class="d">Aktualizacja: + pow. lipnicki, do 23:00</div></div>
+  <div class="tl-item" style="left:1073px;top:261px"><div class="dot" style="border-color:#6b1ff0;background:#6b1ff0"></div><div class="t">19:20</div><div class="d">Raport po zdarzeniu z dziennika decyzji</div></div>
+  <div class="content rows" style="left:72px;top:468px;width:760px">
+    <div><p class="body" style="font-size:18px">Niezweryfikowana informacja („zerwany most”) zostaje oznaczona i <b>nie trafia do komunikatu</b>.</p></div>
+    <div><p class="body" style="font-size:18px">Po zmianie sytuacji SIGNAL sam wskazuje, że wysłany alert jest nieaktualny — <b>decyzję o aktualizacji podejmuje dyżurny</b>.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ 8. BEZPIECZEŃSTWO -->
+<section class="slide">
+  <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
+  <div class="rule" style="left:72px;top:76px;width:1136px"></div>
+  <div class="rule" style="left:72px;top:682px;width:1136px"></div>
+  <div class="wash" style="left:220px;bottom:-330px;width:840px;height:460px;background:radial-gradient(closest-side, rgba(70,50,255,.75), rgba(140,120,255,.3) 55%, transparent)"></div>
+  <div class="content" style="left:72px;top:112px;width:1136px;display:flex;justify-content:space-between;align-items:flex-end">
+    <h1 class="h-lg">Bezpieczeństwo</h1>
+    <p class="body" style="font-size:20px">Czy można temu zaufać?</p>
+  </div>
+  <div class="content" style="left:72px;top:212px;width:1136px">
+    <table class="grid big" style="--fs:18px">
+      <tr><th>Człowiek decyduje</th><th>Wiarygodność danych</th><th>Bezpieczeństwo systemu</th></tr>
+      <tr>
+        <td>AI nie może samodzielnie wysłać, odwołać ani zmienić obszaru alertu. Zatwierdzenie wymaga potwierdzenia i uzasadnienia operatora.</td>
+        <td>Źródło jest <b>zweryfikowane</b> albo <b>niezweryfikowane</b> — bez sztucznych procentów. Zdarzenie potwierdzają min. 2 niezależne służby.</td>
+        <td>Treść zgłoszeń to wyłącznie dane: próba wstrzyknięcia poleceń (<i>prompt injection</i>) trafia do kwarantanny.</td>
+      </tr>
+      <tr>
+        <td>Dziennik audytu dla każdej decyzji: <b>kto · kiedy · co · dlaczego · na podstawie czego</b>.</td>
+        <td>Wynik jakości liczy deterministyczny silnik regułowy. LLM (opcjonalny) daje tylko opinię doradczą.</td>
+        <td>Brak danych osobowych — wyłącznie dane zagregowane. W demo dane są syntetyczne, a wysyłka tylko symulowana.</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ 9. MIERZALNOŚĆ + KROKI -->
+<section class="slide">
+  <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
+  <div class="rule" style="left:72px;top:76px;width:1060px"></div>
+  <div class="rule" style="left:72px;top:672px;width:1060px"></div>
+  <div class="vrule" style="left:470px;top:76px;height:596px"></div>
+  <svg class="blob" style="right:0;top:0;width:150px;height:440px"><use href="#edgeR" fill="url(#gPink)"/></svg>
+  <svg class="blob" style="left:0;bottom:0;width:220px;height:300px"><use href="#edgeL" fill="url(#gBlue)"/></svg>
+  <div class="content" style="left:72px;top:150px;width:380px;text-align:center">
+    <h1 class="h-xl">Dalsze<br>kroki</h1>
+    <div style="margin-top:30px;text-align:left;padding:0 26px">
+      <div class="mono" style="font-size:12.5px;letter-spacing:.08em;margin-bottom:10px">CELE PILOTAŻU — DO ZMIERZENIA</div>
+      <table style="width:100%;border-collapse:collapse;font-size:15.5px">
+        <tr><td style="padding:5px 0;border-bottom:1.5px solid #111">Kompletność komunikatów</td><td class="mono" style="text-align:right;border-bottom:1.5px solid #111"><b>≥ 95%</b></td></tr>
+        <tr><td style="padding:5px 0;border-bottom:1.5px solid #111">Zrozumienie instrukcji</td><td class="mono" style="text-align:right;border-bottom:1.5px solid #111"><b>+20 p.p.</b></td></tr>
+        <tr><td style="padding:5px 0;border-bottom:1.5px solid #111">Czas przygotowania</td><td class="mono" style="text-align:right;border-bottom:1.5px solid #111"><b>−30%</b></td></tr>
+        <tr><td style="padding:5px 0">Decyzje z pełnym audytem</td><td class="mono" style="text-align:right"><b>100%</b></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="content" style="left:510px;top:186px;width:600px;display:grid;grid-template-columns:1fr 1fr;gap:64px 44px;text-align:center">
+    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:500">1. Walidacja</h3><p class="body" style="font-size:17px">Test historyczny na archiwalnych komunikatach i test zrozumiałości: co, gdzie, kiedy, co zrobić?</p></div>
+    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:500">2. Pilotaż</h3><p class="body" style="font-size:17px">Symulacja dyżuru: praca bez i z SIGNAL. Mierzymy czas, liczbę błędów i korekt.</p></div>
+    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:500">3. Integracja</h3><p class="body" style="font-size:17px">Adaptery do rzeczywistych źródeł (IMGW, PSP, WCZK) i granice powiatów z danych PRG.</p></div>
+    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:500">4. Wdrożenie</h3><p class="body" style="font-size:17px">Role i uprawnienia, audyt w bazie danych, procedury zgodne z KSC/NIS2, szkolenia.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ 10. FIN -->
+<section class="slide">
+  <svg class="blob" style="left:60px;top:20px;width:300px;height:300px"><use href="#b1" fill="url(#gBlue)"/></svg>
+  <svg class="blob" style="left:520px;top:-150px;width:340px;height:300px"><use href="#b2" fill="url(#gBlue2)"/></svg>
+  <svg class="blob" style="right:180px;top:70px;width:90px;height:90px"><use href="#b2" fill="url(#gBlue2)"/></svg>
+  <svg class="blob" style="right:-120px;top:-40px;width:330px;height:380px"><use href="#b1" fill="url(#gPink)"/></svg>
+  <svg class="blob" style="left:-80px;bottom:-110px;width:520px;height:300px"><use href="#b4" fill="url(#gBlue)" transform="scale(-1,1) translate(-520,0)"/></svg>
+  <svg class="blob" style="right:-60px;bottom:-120px;width:520px;height:330px"><use href="#b4" fill="url(#gBlue2)"/></svg>
+  <svg class="blob" style="left:720px;bottom:40px;width:90px;height:90px"><use href="#b1" fill="url(#gPink)"/></svg>
+  <div class="content" style="left:0;right:0;top:178px;text-align:center"><h1 style="font-size:72px">Fin!</h1></div>
+  <!-- karty zespołu -->
+  <div class="content" style="left:120px;right:120px;top:300px;display:flex;justify-content:center;gap:18px">
+    <!-- generowane ręcznie: 5 kart -->
+    <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#1200ff,#ff5c7c);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">JD</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Jan Domański</div></div></div>
+    <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#6b1ff0,#ff6b8b);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">JG</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Jakub Goleman</div></div></div>
+    <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#b52cd9,#ff4f7b);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">KG</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Krystian Góźdź</div></div></div>
+    <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#d1004a,#9b5cff);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">MK</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Maks Kozieł</div></div></div>
+    <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#2a00ff,#b52cd9);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">PN</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Piotr Niemiec</div></div></div>
+  </div>
+  <div class="content" style="left:200px;right:200px;top:536px;text-align:center;background:rgba(255,255,255,.85);border-radius:10px;padding:10px 14px">
+    <p class="small" style="font-size:13.5px;color:#222">Stos: Python (biblioteka standardowa) + JavaScript, bez zależności, działa offline. Dane w demo są syntetyczne.<br>Wykorzystanie AI: Claude (Anthropic) wspierał tworzenie kodu, dokumentacji i prezentacji; opcjonalny moduł LLM w aplikacji ma rolę doradczą.</p>
+  </div>
+</section>
+
+</body>
+</html>
