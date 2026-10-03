@@ -1,0 +1,15 @@
+{
+  "name": "rcb-signal-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RCB SIGNAL — demonstrator systemu wspomagania decyzji w procesie ostrzegania (HackYeah 2026 Defence). Dane syntetyczne.",
+  "type": "module",
+  "scripts": {
+    "start": "python3 server.py",
+    "build": "node --check web/js/app.js && echo 'Brak kroku budowania — aplikacja działa bez bundlera.'",
+    "test": "node --test tests/analyzer.test.mjs && python3 -m unittest discover tests"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

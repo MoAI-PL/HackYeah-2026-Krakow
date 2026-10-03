@@ -1,0 +1,357 @@
+// SCREEN 4–6 — SIGNAL WRITER: projekt → analiza jakości → zatwierdzenie (człowiek) → symulowana dystrybucja.
+
+import * as store from '../store.js';
+import { analyze } from '../services.js';
+import { SMS_LIMIT } from '../analyzer.js';
+import { esc, pageHead, panel, tag, callout, pct, ico, scoreRing, animateScore, wordDiff, sleep, syntheticNote } from '../ui.js';
+import { mapSvg, geoPanel } from './map.js';
+
+const CRITERIA = [
+  ['what', 'WHAT', 'Co się dzieje'],
+  ['where', 'WHERE', 'Gdzie'],
+  ['when', 'WHEN', 'Kiedy / do kiedy'],
+  ['action', 'ACTION', 'Co zrobić'],
+  ['length', 'LENGTH', 'Limit SMS'],
+  ['consistency', 'CONSISTENCY', 'Spójność ze źródłami'],
+  ['clarity', 'CLARITY', 'Czytelność'],
+];
+
+let busy = null;            // 'analyzing' — trwa animacja analizy
+let pendingAnim = null;     // { from } — animacja pierścienia po ponownym renderze
+let animateDistribution = false;
+let scrollTarget = null;      // panel, który ma być widoczny po ponownym renderze
+const advisory = {};        // opinie doradcze LLM per projekt
+
+// ---------------------------------------------------------------- fragmenty
+
+function charRow(text) {
+  const n = [...text].length;
+  const over = n > SMS_LIMIT;
+  return `<div class="char-row">
+    <div class="char-meter ${over ? 'over' : ''}" aria-hidden="true"><i style="width:${Math.min(100, (n / SMS_LIMIT) * 100)}%"></i></div>
+    <span class="char-count ${over ? 'over' : ''}" data-chars>ZNAKI: ${n} / ${SMS_LIMIT}</span>
+  </div>`;
+}
+
+function phonePreview(text) {
+  return `<div class="phone-preview" aria-label="Podgląd wiadomości u odbiorcy">
+    <div class="from">ALERT RCB · PODGLĄD</div>
+    <div class="bubble" data-preview>${esc(text) || '<span class="faint">—</span>'}</div>
+  </div>`;
+}
+
+function qualityPanel(d) {
+  if (busy === 'analyzing') {
+    return panel('Kontrola jakości', `<div class="callout-title mono" style="margin-bottom:12px;color:var(--accent)">ANALIZOWANIE…</div>
+      <ol class="progress-steps" id="analysis-steps">
+        ${['3 źródła zweryfikowane', 'Spójność geograficzna sprawdzona', 'Struktura komunikatu sprawdzona', 'Limit znaków i kodowanie sprawdzone'].map((l) => `<li><span class="ico">·</span>${l}</li>`).join('')}
+      </ol>`);
+  }
+  const a = d.analysis;
+  if (!a) {
+    return panel('Kontrola jakości', `<div class="muted">Komunikat nie został jeszcze przeanalizowany. Kliknij <b>ANALIZUJ</b>, aby sprawdzić kompletność (WHAT · WHERE · WHEN · ACTION), limit znaków i spójność ze źródłami.</div>
+      ${syntheticNote('Ocena dotyczy konstrukcji komunikatu — nie prawdziwości informacji')}`);
+  }
+  const stale = d.analyzedText !== d.text;
+  const hist = d.scoreHistory;
+  const delta = hist.length > 1 ? hist[hist.length - 1] - hist[hist.length - 2] : 0;
+  const crit = CRITERIA.map(([k, code, desc]) => {
+    const c = a.checks[k];
+    return `<div class="criterion ${c.status}">
+      <div class="c-head">${ico(c.status)}<span>${code}</span><span class="c-pts" style="margin-left:auto">${c.points}/${c.max}</span></div>
+      <div class="faint" style="font-size:11.5px">${desc}</div>
+      <div class="c-bar"><i style="width:${(c.points / c.max) * 100}%"></i></div>
+    </div>`;
+  }).join('');
+  const issues = a.issues.length ? `<ul class="checklist" style="margin-top:14px">${a.issues.map((i) => `<li>${ico(i.severity === 'error' ? 'fail' : i.severity)}<span><b class="mono" style="font-size:11px;letter-spacing:.08em">${esc(i.criterion)}</b> — ${esc(i.message)}</span></li>`).join('')}</ul>`
+    : `<div style="margin-top:14px">${callout('ok', 'Brak uwag', 'Komunikat spełnia wszystkie kryteria.')}</div>`;
+  const blocking = a.issues.filter((i) => i.severity === 'error');
+  const blockingBox = blocking.length ? `<div style="margin-top:12px">${callout('error', blocking.some((b) => b.criterion === 'LENGTH') ? `Przekroczony limit znaków — ${a.checks.length.chars} / ${SMS_LIMIT}` : blocking.some((b) => b.criterion === 'ACTION') ? 'Wymagana instrukcja działania' : 'Błąd blokujący', blocking.some((b) => b.criterion === 'ACTION') ? 'Odbiorca może nie wiedzieć, co zrobić. Zatwierdzenie zablokowane do czasu poprawy.' : 'Zatwierdzenie zablokowane do czasu poprawy.')}</div>` : '';
+  const sugg = a.suggestion && a.suggestion !== d.text && d.status !== 'sent' ? `<div class="suggestion" style="margin-top:14px">
+      <div class="callout-title mono" style="color:var(--accent)">REKOMENDACJA SIGNAL</div>
+      <div class="s-text">${wordDiff(d.text, a.suggestion)}</div>
+      <div class="btn-row"><button class="btn primary" data-act="apply">Zastosuj rekomendację</button><span class="faint" style="font-size:12px">${[...a.suggestion].length}/${SMS_LIMIT} zn. · zapis bez polskich znaków (GSM-7) · operator może dalej edytować</span></div>
+    </div>` : '';
+  const adv = advisory[d.id];
+  const advBox = adv ? (adv.unavailable
+    ? `<div style="margin-top:12px">${callout('info', 'Opinia LLM niedostępna', 'Dostawca zewnętrzny nie odpowiedział — wynik regułowy pozostaje wiążący.')}</div>`
+    : `<div style="margin-top:12px" class="callout info"><span class="ico info">i</span><div><div class="callout-title">Opinia doradcza modelu językowego (nie wpływa na wynik)</div>
+        <p>${esc((adv.issues || []).join(' · ') || 'Brak dodatkowych uwag.')}</p>${adv.suggestion ? `<p class="mono">${esc(adv.suggestion)}</p>` : ''}</div></div>`) : '';
+
+  return panel('Kontrola jakości', `<span id="quality-anchor"></span>
+    ${stale ? `<div style="margin-bottom:12px">${callout('warn', 'Treść zmieniona po analizie', 'Wynik dotyczy poprzedniej wersji. Kliknij ANALIZUJ ponownie.')}</div>` : ''}
+    <div class="score-block">
+      ${scoreRing(a.score, { id: 'score-ring', blocked: a.blocking })}
+      <div>
+        <div class="stat-label">Actionability score</div>
+        <div style="font-size:13px;margin-top:6px" class="muted">Kompletność i wykonalność komunikatu.<br>Silnik: <span class="mono">${esc(a.engine)}</span> (deterministyczny)</div>
+        ${a.blocking ? `<div class="score-delta" style="color:var(--red)">✕ Błąd blokujący — zatwierdzenie niemożliwe</div>` : ''}
+        ${delta ? `<div class="score-delta">${delta > 0 ? '▲ +' : '▼ '}${delta} pkt względem poprzedniej wersji</div>` : ''}
+        ${hist.length > 1 ? `<div class="faint mono" style="font-size:11px;margin-top:6px">HISTORIA: ${hist.join(' → ')}</div>` : ''}
+      </div>
+    </div>
+    <div class="criteria" style="margin-top:16px">${crit}</div>
+    ${issues}${blockingBox}${sugg}${advBox}
+    ${syntheticNote('Ocena dotyczy konstrukcji komunikatu — nie prawdziwości informacji')}`, { right: tag(stale ? 'Nieaktualna' : 'Aktualna', stale ? 'amber' : 'green') });
+}
+
+function approvalPanel(d) {
+  const a = d.analysis;
+  const srcs = store.sourcesFor(d.eventId).filter((s) => s.verification === 'verified').length;
+  const geo = store.geoAnalysis(d.areaIds, d.kind === 'update' ? 'T2' : store.getState().phase);
+  const len = a.checks.length;
+  const items = [
+    ['Actionability', `${a.score} / 100`, a.score >= 90 ? 'pass' : 'warn'],
+    ['Źródła faktograficzne', `${srcs} zweryf.`, srcs >= 2 ? 'pass' : 'warn'],
+    ['Walidacja GEO', geo.passed ? `OK · ${pct(geo.coverage)}` : `LUKA · ${pct(geo.coverage)}`, geo.passed ? 'pass' : 'warn'],
+    ['Limit znaków', `${len.chars} / ${SMS_LIMIT}`, len.status === 'fail' ? 'fail' : 'pass'],
+  ];
+  const defaultWhy = d.kind === 'update'
+    ? 'Rozszerzenie zagrożenia na pow. lipnicki (PSP, WCZK) i wydłużenie ostrzeżenia IMGW do 23:00.'
+    : 'Zagrożenie potwierdzone przez 3 niezależne źródła (IMGW, PSP, WCZK); ryzyko dla mienia i zdrowia.';
+  return `<section class="panel" id="approval-panel" style="border-color:var(--green)">
+    <header class="panel-head"><h2>Alert gotowy do zatwierdzenia · ${esc(d.id)}</h2>${tag('Wymagana decyzja operatora', 'amber')}</header>
+    <div class="panel-body stack" style="gap:14px">
+      <div class="approval-grid">${items.map(([l, v, st]) => `<div class="approval-item ${st}"><div class="stat-label">${l}</div><div class="v">${esc(v)}</div></div>`).join('')}</div>
+      ${!geo.passed ? callout('warn', 'Walidacja GEO z uwagami', 'Obszar alertu nie pokrywa w pełni obszaru zagrożenia. Zatwierdzenie możliwe — decyzja zostanie odnotowana.') : ''}
+      <label class="field">Uzasadnienie decyzji (zapis w dzienniku audytu)
+        <textarea id="why" rows="2">${esc(defaultWhy)}</textarea>
+      </label>
+      <label class="confirm-row"><input type="checkbox" id="confirm"><span>Potwierdzam weryfikację treści, obszaru i źródeł. Rozumiem, że w środowisku demonstracyjnym wysyłka jest <b>wyłącznie symulowana</b>.</span></label>
+      <div class="btn-row">
+        <button class="btn" data-act="edit">Edytuj</button>
+        <button class="btn" data-act="changes">Zwróć do poprawy</button>
+        <span style="flex:1"></span>
+        <button class="btn approve" data-act="approve" disabled>Zatwierdź i symuluj wysyłkę</button>
+      </div>
+      <div class="faint" style="font-size:12px">${store.OPERATOR.id} · ${store.OPERATOR.role} · SIGNAL nie może samodzielnie wysłać, odwołać ani zmienić obszaru alertu.</div>
+    </div>
+  </section>`;
+}
+
+function distributionPanel(rec) {
+  const ops = store.getData().distribution.operators;
+  const labels = rec.areaIds.map((id) => store.areaById(id).properties.label).join(', ');
+  return `<section class="panel" id="distribution-panel">
+    <header class="panel-head"><h2>Symulowana dystrybucja · ${esc(rec.id)}</h2>${tag('Symulacja zakończona', 'green')}</header>
+    <div class="panel-body">
+      <div class="pipeline">${['Walidacja', 'Zatwierdzono', 'Dystrybucja zainicjowana', 'Dostarczono (symulacja)'].map((l) => `<div class="p-step done">${l}</div>`).join('')}</div>
+      <dl class="kv" style="margin:16px 0">
+        <dt>Obszar docelowy</dt><dd>${esc(labels)}</dd>
+        <dt>Zatwierdzono</dt><dd class="mono">${esc(rec.approvedAt)} · ${store.OPERATOR.id}</dd>
+        <dt>Szacowany zasięg</dt><dd class="mono" style="font-size:20px;color:var(--accent)">${pct(rec.reach)}</dd>
+      </dl>
+      <div class="stat-label" style="margin-bottom:6px">Raportowanie operatorów (symulacja)</div>
+      ${ops.map((o) => `<div class="op-row"><span class="mono">${esc(o.name)}</span><div class="op-bar"><i data-w="${o[rec.phase] * 100}" style="width:${animateDistribution ? 0 : o[rec.phase] * 100}%"></i></div><span class="mono num">${pct(o[rec.phase])}</span></div>`).join('')}
+      ${syntheticNote('Dane syntetyczne — wyłącznie demonstracja. Brak integracji z infrastrukturą operatorów.')}
+    </div>
+  </section>`;
+}
+
+function areaPicker(d) {
+  const s = store.getState();
+  const phase = d.kind === 'update' ? 'T2' : s.phase;
+  const gaps = store.geoAnalysis(d.areaIds, phase).gaps.map((g) => g.id);
+  const locked = d.status === 'sent' || d.status === 'review';
+  return panel('Obszar dystrybucji', `<div class="area-picker">
+    ${store.getData().areas.features.map((f) => `<label class="area-opt ${gaps.includes(f.id) ? 'gap' : ''}">
+      <input type="checkbox" data-area="${f.id}" ${d.areaIds.includes(f.id) ? 'checked' : ''} ${locked ? 'disabled' : ''}>
+      <span>${esc(f.properties.label)}</span>
+      <span class="exp">${f.properties.exposure[phase] ? `${pct(f.properties.exposure[phase])} w strefie` : '—'}</span>
+    </label>`).join('')}
+  </div><div class="faint" style="font-size:12px;margin-top:8px">Najmniejszy obszar dystrybucji: powiat. % — udział populacji w strefie zagrożenia (synt.).</div>`);
+}
+
+function otherDrafts() {
+  const data = store.getData();
+  const rows = data.alerts.filter((a) => a.eventId !== data.meta.mainEventId);
+  return panel('Kolejka komunikatów — pozostałe zdarzenia', `<div class="table-wrap"><table>
+    <thead><tr><th>ID</th><th>Zdarzenie</th><th>Treść</th><th>Status</th></tr></thead>
+    <tbody>${rows.map((a) => `<tr><td class="mono faint">${esc(a.id)}</td><td>${esc(data.events.find((e) => e.id === a.eventId).title)}</td>
+      <td class="mono" style="font-size:12.5px">${esc(a.text)}</td>
+      <td>${a.status === 'sent' ? tag(`Wysłany ${a.sentAt}`, 'green') : tag('Projekt', 'cyan')}</td></tr>`).join('')}</tbody>
+  </table></div>`, { bodyClass: 'tight' });
+}
+
+// ---------------------------------------------------------------- widok
+
+export function render() {
+  const s = store.getState();
+  const d = store.activeDraft();
+  const data = store.getData();
+
+  if (!d) {
+    const body = s.stage === 2
+      ? `<div class="empty"><div>Zdarzenie EVT-2026-1042 nie ma jeszcze projektu alertu.</div><button class="btn primary" data-act="create">Przygotuj projekt alertu</button></div>`
+      : `<div class="empty">${s.stage < 2 ? 'Brak projektu alertu. Najpierw otwórz i przeanalizuj zdarzenie EVT-2026-1042.' : 'Brak aktywnego projektu.'}</div>`;
+    return `${pageHead('04 Alerty', 'SIGNAL WRITER', 'Przygotowanie komunikatu')}${panel('Projekt alertu', body)}<div style="margin-top:16px">${otherDrafts()}</div>`;
+  }
+
+  const isUpdate = d.kind === 'update';
+  const sentRec = s.sent.find((a) => a.id === d.id);
+  const prevSent = isUpdate ? s.sent.find((a) => a.kind === 'initial') : null;
+  const editable = d.status === 'draft' || d.status === 'analyzed';
+  const canSubmit = editable && d.analysis && !d.analysis.blocking && d.analyzedText === d.text;
+  const variants = data.testVariants;
+
+  const editor = panel(`Projekt alertu · ${d.id} · ${isUpdate ? 'Aktualizacja' : 'Alert pierwotny'}`, `
+    ${isUpdate && prevSent ? `<div style="margin-bottom:12px">${callout('info', `Aktualizacja alertu ${prevSent.id}`, `Zmiany względem wysłanej wersji:<br><span class="mono" style="font-size:12.5px">${wordDiff(prevSent.text, d.text)}</span>`)}</div>` : ''}
+    <textarea class="sms-editor" id="sms" spellcheck="false" aria-label="Treść alertu" ${editable ? '' : 'disabled'}>${esc(d.text)}</textarea>
+    ${charRow(d.text)}
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn primary" data-act="analyze" ${editable && !busy ? '' : 'disabled'}>Analizuj</button>
+      <button class="btn approve" data-act="submit" ${canSubmit ? '' : 'disabled'} title="${d.analysis?.blocking ? 'Błąd blokujący — popraw komunikat' : !d.analysis ? 'Najpierw wykonaj analizę' : ''}">Przekaż do zatwierdzenia →</button>
+      <span style="flex:1"></span>
+      ${editable ? `<select id="variant" aria-label="Wariant testowy" style="padding:8px 10px;background:var(--panel-2);border:1px solid var(--line-strong);border-radius:3px">
+        <option value="">Wariant testowy (stany błędów)…</option>
+        ${variants.map((v) => `<option value="${v.id}">${esc(v.label)}</option>`).join('')}
+        <option value="__draft">Przywróć projekt wyjściowy</option>
+      </select>` : ''}
+    </div>
+    <div class="faint" style="font-size:12px;margin-top:10px">Generowanie rekomendacji → przegląd → zatwierdzenie przez operatora. SIGNAL nie wysyła komunikatów samodzielnie.</div>
+  `, { right: tag(d.status === 'sent' ? 'Wysłany (symulacja)' : d.status === 'review' ? 'Do zatwierdzenia' : d.analysis ? 'Przeanalizowany' : 'Projekt', d.status === 'sent' ? 'green' : d.status === 'review' ? 'amber' : 'cyan') });
+
+  return `${pageHead('04 Alerty', 'SIGNAL WRITER', isUpdate ? 'Aktualizacja alertu' : 'Przygotowanie komunikatu', `Zdarzenie <a href="#/events/${esc(d.eventId)}">${esc(d.eventId)}</a> · kontrola jakości komunikatu, nie generator tekstu`)}
+    <div class="grid g-main-side">
+      <div class="stack">
+        ${editor}
+        ${d.status === 'review' ? approvalPanel(d) : ''}
+        ${sentRec ? distributionPanel(sentRec) : ''}
+        ${qualityPanel(d)}
+      </div>
+      <div class="stack">
+        ${panel('Podgląd u odbiorcy', phonePreview(d.text))}
+        ${areaPicker(d)}
+        ${geoPanel(d.areaIds, { title: 'Walidacja obszaru — SIGNAL GEO' })}
+        <section class="panel"><header class="panel-head"><h2>Obszar na mapie</h2><a class="mono" style="font-size:11px" href="#/map">PEŁNA MAPA →</a></header><div class="map-wrap">${mapSvg({ compact: true })}</div></section>
+      </div>
+    </div>
+    <div style="margin-top:16px">${otherDrafts()}</div>`;
+}
+
+async function runAnalyzeSequence(ctx) {
+  const d = store.activeDraft();
+  const text = d.text;
+  busy = 'analyzing';
+  scrollTarget = '#analysis-steps';
+  ctx.refresh();
+  const steps = document.querySelectorAll('#analysis-steps li');
+  for (const li of steps) {
+    await sleep(320);
+    li.classList.add('done');
+    li.querySelector('.ico').textContent = '✓';
+  }
+  await sleep(250);
+  busy = null;
+  pendingAnim = { from: 0 };
+  scrollTarget = '#quality-anchor';
+  const result = store.runAnalysis();
+  store.toast(`ANALIZA ZAKOŃCZONA — wynik ${result.score}/100, ${result.issues.length} uwag(i).`, result.blocking ? 'error' : result.score >= 90 ? 'ok' : 'warn');
+  // Opinia doradcza LLM (jeśli skonfigurowano) — nie zmienia wyniku.
+  const full = await analyze(text, store.analysisContext(d));
+  if (full.advisory) { advisory[d.id] = full.advisory; ctx.refresh(); }
+}
+
+async function runApproveSequence(why, ctx) {
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  const labels = ['Walidacja', 'Zatwierdzono', 'Dystrybucja zainicjowana', 'Dostarczono (symulacja)'];
+  overlay.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="Symulowana wysyłka">
+    <header class="panel-head"><h2>Symulowana wysyłka</h2>${tag('Środowisko demonstracyjne', 'amber')}</header>
+    <div class="panel-body">
+      <div class="pipeline">${labels.map((l, i) => `<div class="p-step" data-i="${i}">${l}</div>`).join('')}</div>
+      <div class="mono" id="pipe-msg" style="font-size:13px;color:var(--accent)">WALIDACJA…</div>
+      <div class="faint" style="font-size:12px">Żadna wiadomość nie jest wysyłana do rzeczywistych odbiorców.</div>
+    </div></div>`;
+  document.body.appendChild(overlay);
+  const msgs = ['WALIDACJA…', 'ZATWIERDZONO — decyzja zapisana w dzienniku', 'DYSTRYBUCJA ZAINICJOWANA (symulacja)', 'SYMULOWANE DOSTARCZENIE ZAKOŃCZONE'];
+  for (let i = 0; i < labels.length; i++) {
+    const el = overlay.querySelector(`[data-i="${i}"]`);
+    el.classList.add('run');
+    overlay.querySelector('#pipe-msg').textContent = msgs[i];
+    await sleep(700);
+    el.classList.remove('run');
+    el.classList.add('done');
+  }
+  await sleep(400);
+  overlay.remove();
+  animateDistribution = true;
+  scrollTarget = '#distribution-panel';
+  const d = store.activeDraft();
+  store.approve(why);
+  store.toast(`${d.id} zatwierdzony przez ${store.OPERATOR.id}. Symulowana dystrybucja zakończona.`, 'ok');
+}
+
+export function mount(root, ctx) {
+  const d = store.activeDraft();
+  root.querySelector('[data-act="create"]')?.addEventListener('click', () => store.createDraft());
+  if (!d) return;
+
+  const ta = root.querySelector('#sms');
+  ta?.addEventListener('input', () => {
+    store.updateDraftText(ta.value);
+    const n = [...ta.value].length;
+    const over = n > SMS_LIMIT;
+    const counter = root.querySelector('[data-chars]');
+    counter.textContent = `ZNAKI: ${n} / ${SMS_LIMIT}`;
+    counter.classList.toggle('over', over);
+    const meter = root.querySelector('.char-meter');
+    meter.classList.toggle('over', over);
+    meter.querySelector('i').style.width = `${Math.min(100, (n / SMS_LIMIT) * 100)}%`;
+    root.querySelector('[data-preview]').textContent = ta.value;
+    const submit = root.querySelector('[data-act="submit"]');
+    if (submit) submit.disabled = true;
+  });
+
+  root.querySelector('[data-act="analyze"]')?.addEventListener('click', () => runAnalyzeSequence(ctx));
+  root.querySelector('[data-act="apply"]')?.addEventListener('click', () => {
+    const before = d.analysis.score;
+    pendingAnim = { from: before };
+    const r = store.applySuggestion();
+    store.toast(`Rekomendacja zastosowana: ${r.before} → ${r.after} pkt.`, 'ok');
+  });
+  root.querySelector('[data-act="submit"]')?.addEventListener('click', () => {
+    scrollTarget = '#approval-panel';
+    if (store.submitForReview()) store.toast('Projekt przekazany do zatwierdzenia.', 'info');
+  });
+  root.querySelector('#variant')?.addEventListener('change', (e) => {
+    const v = e.target.value;
+    if (!v) return;
+    pendingAnim = { from: d.analysis?.score ?? 0 };
+    scrollTarget = '#quality-anchor';
+    if (v === '__draft') {
+      const original = d.kind === 'update' ? d.text : store.getData().alerts.find((a) => a.id === d.id).text;
+      store.loadVariant(original);
+    } else {
+      store.loadVariant(store.getData().testVariants.find((x) => x.id === v).text);
+    }
+  });
+  root.querySelectorAll('[data-area]').forEach((el) => el.addEventListener('change', () => store.toggleDraftArea(el.dataset.area)));
+
+  // Zatwierdzanie
+  const confirmBox = root.querySelector('#confirm');
+  const approveBtn = root.querySelector('[data-act="approve"]');
+  confirmBox?.addEventListener('change', () => { approveBtn.disabled = !confirmBox.checked || !root.querySelector('#why').value.trim(); });
+  root.querySelector('#why')?.addEventListener('input', (e) => { approveBtn.disabled = !confirmBox.checked || !e.target.value.trim(); });
+  approveBtn?.addEventListener('click', () => runApproveSequence(root.querySelector('#why').value.trim(), ctx));
+  root.querySelector('[data-act="edit"]')?.addEventListener('click', () => store.requestChanges('Edycja przez operatora przed zatwierdzeniem'));
+  root.querySelector('[data-act="changes"]')?.addEventListener('click', () => {
+    const reason = prompt('Powód zwrotu do poprawy (zapis w dzienniku):', 'Doprecyzować instrukcję działania');
+    if (reason !== null) store.requestChanges(reason);
+  });
+
+  // Przewinięcie i animacje po ponownym renderze
+  if (scrollTarget) {
+    const el = root.querySelector(scrollTarget);
+    scrollTarget = null;
+    if (el) requestAnimationFrame(() => el.closest('.panel').scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }
+  if (pendingAnim) {
+    animateScore(root.querySelector('#score-ring'), pendingAnim.from);
+    pendingAnim = null;
+  }
+  if (animateDistribution) {
+    animateDistribution = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => root.querySelectorAll('.op-bar i').forEach((i) => { i.style.width = `${i.dataset.w}%`; })));
+  }
+}
