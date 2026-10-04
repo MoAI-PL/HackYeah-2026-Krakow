@@ -26,7 +26,8 @@ const STAGE_ROUTE = {
   8: '#/events/EVT-2026-1042', 9: '#/alerts', 10: '#/events/EVT-2026-1042', 11: '#/reports/AAR-1042',
 };
 
-let presenterCollapsed = false;
+// Pasek prezentera jest domyślnie ukryty — klawisz P pokazuje go na czas prezentacji.
+let presenterHidden = true;
 let llm = { llm: false };
 
 function route() {
@@ -49,11 +50,9 @@ function renderShell() {
   const d = store.getData();
   const { entry } = route();
   const dateStr = d.meta.scenarioDate.split('-').reverse().join('.');
+  // Wygląd gov-tech (klasa .gov w signal.css) na wszystkich ekranach.
+  document.getElementById('app').className = `gov${presenterHidden ? ' no-presenter' : ''}`;
   document.getElementById('app').innerHTML = `
-    <div class="classification" role="note">
-      <span>Środowisko demonstracyjne</span><span class="sep">—</span><span>dane syntetyczne</span>
-      <span class="sep opt">·</span><span class="opt">brak połączenia z systemami produkcyjnymi</span>
-    </div>
     <header class="topbar">
       <div class="brand">
         <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
@@ -68,9 +67,10 @@ function renderShell() {
       </div>
       <div class="spacer"></div>
       <div class="top-meta">
+        <div class="meta-item"><span class="meta-label">Źródła danych</span><span class="meta-value ${s.outage ? 'feed-warn' : ''}">${s.outage ? `${d.feeds.length - 1}/${d.feeds.length} · awaria` : `${d.feeds.length}/${d.feeds.length} działa`}</span></div>
         <div class="meta-item keep"><span class="meta-label">Czas scenariusza</span><span class="meta-value clock-value">${dateStr} · ${esc(s.clock)}</span></div>
-        <div class="meta-item"><span class="meta-label">Status systemu</span><span class="meta-value"><span class="status-dot"></span>OPERACYJNY</span></div>
-        <div class="meta-item opt"><span class="meta-label">Silnik analizy</span><span class="meta-value">${llm.llm ? 'REGUŁY + LLM (DORADCZO)' : 'REGUŁOWY · DETERMINISTYCZNY'}</span></div>
+        <div class="meta-item sys"><span class="meta-label">Status systemu</span><span class="meta-value"><span class="status-dot"></span>OPERACYJNY</span></div>
+        <div class="meta-item opt sys"><span class="meta-label">Silnik analizy</span><span class="meta-value">${llm.llm ? 'REGUŁY + LLM (DORADCZO)' : 'REGUŁOWY · DETERMINISTYCZNY'}</span></div>
         <div class="meta-item opt"><span class="meta-label">Operator</span><span class="meta-value">${store.OPERATOR.id} · ${store.OPERATOR.role.toUpperCase()}</span></div>
       </div>
     </header>
@@ -80,16 +80,12 @@ function renderShell() {
         <div class="nav-group">
           ${NAV.map((n) => {
             const badge = navBadge(n.path);
-            return `<a class="nav-link ${n === entry ? 'active' : ''}" href="#/${n.path}" ${n === entry ? 'aria-current="page"' : ''}>
+            return `<a class="nav-link ${n === entry ? 'active' : ''}" href="#/${n.path}" title="${esc(n.module)}" ${n === entry ? 'aria-current="page"' : ''}>
               <span class="nav-code">${n.code}</span>
               <span><span class="nav-title">${esc(n.title)}</span><span class="nav-module">${esc(n.module)}</span></span>
               ${badge ? `<span class="nav-badge">${esc(badge)}</span>` : '<span></span>'}
             </a>`;
           }).join('')}
-        </div>
-        <div class="sidebar-foot">
-          <strong>Zasada:</strong> SIGNAL rekomenduje.<br>Człowiek decyduje.<br>
-          <span class="mono">Wysyłka: wyłącznie symulowana</span>
         </div>
       </nav>
       <main class="main" id="view" tabindex="-1"></main>
@@ -103,7 +99,7 @@ function renderPresenter() {
   const st = store.STAGES[s.stage];
   const total = store.STAGES.length - 1;
   const go = STAGE_ROUTE[s.stage];
-  return `<div class="presenter ${presenterCollapsed ? 'collapsed' : ''}" role="region" aria-label="Sterowanie scenariuszem">
+  return `<div class="presenter" ${presenterHidden ? 'hidden' : ''} role="region" aria-label="Sterowanie scenariuszem">
     <span class="p-label">TRYB DEMO</span>
     <span class="p-step">KROK ${s.stage}/${total} · ${esc(st.label.toUpperCase())}</span>
     <span class="p-progress" aria-hidden="true">${Array.from({ length: total }, (_, i) => `<i class="${i < s.stage ? 'on' : ''}"></i>`).join('')}</span>
@@ -148,7 +144,7 @@ document.addEventListener('click', (e) => {
 
 document.addEventListener('keydown', (e) => {
   if (e.target.closest('input, textarea, select')) return;
-  if (e.key.toLowerCase() === 'p') { presenterCollapsed = !presenterCollapsed; render(); }
+  if (e.key.toLowerCase() === 'p') { presenterHidden = !presenterHidden; render(); }
 });
 
 window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });

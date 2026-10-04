@@ -67,7 +67,7 @@ test('treść wymieniająca obszar spoza dystrybucji jest błędem', () => {
   const update = buildSuggestion(ev.writer.T2);
   const r = analyzeAlert(update, ctx('T2', ['P01', 'P02']));
   assert.equal(r.blocking, true);
-  assert.ok(r.issues.some((i) => i.message.includes('pow. lipnicki')));
+  assert.ok(r.issues.some((i) => i.message.includes('pow. limanowski')));
 });
 
 test('aktualizacja z pełnym obszarem: 92/100', () => {
@@ -114,4 +114,48 @@ test('dane demo: wymagane minimum', () => {
   assert.ok(data.alerts.length >= 5);
   assert.ok(data.areas.features.length >= 3);
   assert.ok(data.afterActionReports.length + 1 >= 3);
+});
+
+// ---------------------------------------------------------------- SIGNAL INTELLIGENCE: łączenie meldunków
+import { correlate, classify, linked } from '../web/js/correlate.js';
+
+test('łączenie meldunków: algorytm odtwarza przypisanie eksperckie 17/17', () => {
+  const r = correlate(data.sources, data.events);
+  for (const s of data.sources) {
+    const got = Object.keys(r.byEvent).find((k) => r.byEvent[k].includes(s.id));
+    assert.equal(got, s.expertEventId, `${s.id}: ${got} zamiast ${s.expertEventId}`);
+  }
+});
+
+test('łączenie meldunków: reguły obszaru, czasu i rodzaju zagrożenia', () => {
+  const base = { time: '17:00', areaIds: ['P01'], cls: 'hydro' };
+  assert.equal(linked(base, { ...base, time: '17:45' }), true);
+  assert.equal(linked(base, { ...base, time: '18:30' }), false, 'poza oknem 60 min');
+  assert.equal(linked(base, { ...base, areaIds: ['P06'] }), false, 'inny powiat');
+  assert.equal(linked(base, { ...base, cls: 'wind' }), false, 'inne zagrożenie');
+  assert.equal(linked(base, { ...base, cls: null }), true, 'meldunek bez nazwanego zagrożenia dołącza po obszarze i czasie');
+  assert.equal(classify('Skażenie bakteriologiczne wody — wodociąg'), 'water');
+  assert.equal(classify('Prośba o rozważenie Alertu RCB'), null);
+});
+
+test('możliwy duplikat jest wyliczany, a nie wpisany w dane', () => {
+  assert.ok(data.events.every((e) => !('duplicateCandidate' in e)));
+  const r = correlate(data.sources, data.events);
+  assert.equal(r.duplicates['EVT-2026-1042'].id, 'EVT-2026-1037');
+});
+
+test('dystrybucja, obciążenie alertami i awaria źródła', async () => {
+  const store = await import('../web/js/store.js');
+  store.init(data);
+  store.resetDemo?.();
+  store.startDemo();
+  const del = store.deliveryStats('T1');
+  assert.equal(del.warn, true);
+  assert.equal(del.slowest.name, 'Operator C');
+  assert.deepEqual(store.alertLoad(['P01', 'P02']).map((x) => x.id), ['EVT-2026-1038']);
+  store.setOutage('IMGW');
+  assert.equal(store.sourceHealth().find((f) => f.id === 'IMGW').down, true);
+  assert.ok(store.getState().audit.some((a) => a.what.includes('Ocena oznaczona jako niepełna')));
+  store.setOutage(null);
+  assert.equal(store.sourceHealth().every((f) => !f.down), true);
 });

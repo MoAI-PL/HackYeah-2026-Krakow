@@ -37,9 +37,13 @@
 |---|---|
 | `server.py` | Serwuje `web/` i `data/` (z ochroną przed path traversal), `GET /api/health`, `POST /api/analyze` (opcjonalny LLM). Ładuje `.env` bez zależności. |
 | `web/js/analyzer.js` | **SIGNAL WRITER.** Czysta funkcja `analyzeAlert(text, ctx)` bez efektów ubocznych. Wagi: WHAT 12, WHERE 15, WHEN 15, ACTION 25, LENGTH 10, CONSISTENCY 15, CLARITY 8. Zwraca również obiekt `schema` zgodny ze strukturą z koncepcji (`what/where/when/action/consistency/length_ok/score/issues/suggestion`). |
-| `web/js/store.js` | Stan aplikacji i maszyna stanów scenariusza (etapy 0–12), dziennik audytu, analiza GEO, budowa raportu AAR z przebiegu sesji. Stan trwały w `localStorage` (z obsługą braku dostępu). |
+| `web/js/correlate.js` | **SIGNAL INTELLIGENCE.** Łączenie meldunków w zdarzenia jawnymi regułami: wspólny powiat + okno 60 min + ten sam rodzaj zagrożenia (słownik rdzeni; meldunek bez nazwanego zagrożenia dołącza po obszarze i czasie). Grupowanie union-find, nazwanie grupy zdarzeniem o największym pokryciu powiatów, wyliczanie możliwych duplikatów i uzasadnienia „dlaczego połączono”. Test: odtwarza przypisanie eksperckie (`expertEventId`) 17/17. |
+| `web/js/store.js` | Stan aplikacji i maszyna stanów scenariusza (etapy 0–12), dziennik audytu, analiza GEO, `alertLoad` (inne alerty w powiatach, 7 dni), `deliveryStats` (czas dostarczenia per operator, ostrzeżenie przy rozrzucie > 2×), `sourceHealth`/`setOutage` (stan źródeł i awaria), decyzje o duplikacie i odwołaniu alertu, raport AAR z przebiegu sesji. Stan trwały w `localStorage` (z obsługą braku dostępu). |
 | `web/js/services.js` | Warstwa usług: wczytanie danych i analiza z dostawcą doradczym oraz fallbackiem. |
-| `web/js/app.js` | Powłoka (pasek klasyfikacji, nagłówek, nawigacja), routing hash (`#/events/:id`, `#/reports/:id`), pasek prezentera, powiadomienia. |
+| `web/js/app.js` | Powłoka (nagłówek ze stanem źródeł, nawigacja), routing hash (`#/events/:id`, `#/reports/:id`), pasek prezentera (domyślnie ukryty, klawisz P), powiadomienia. |
+| `web/js/views/map.js` | Mapa 8 prawdziwych powiatów (PRG/GUGiK, wstępnie zrzutowane do SVG) i mapa Polski z 380 powiatami (`data/poland-powiaty.json`). |
+| `web/js/views/analytics.js` | Cele pilotażu, benchmark demo i **test historyczny**: 9 prawdziwych Alertów RCB (`data/historical-alerts.json`) przepuszczonych przez te same reguły. |
+| `build_static.py` | Składa `dist/` (web + data) do publikacji jako strona statyczna — aplikacja nie wymaga serwera. |
 | `web/js/views/*.js` | Ekrany. Każdy eksportuje `render(ctx)` → HTML oraz `mount(root, ctx)`, który podpina zdarzenia. |
 
 ## Warstwa dostawców
@@ -70,14 +74,15 @@ Docelowo w ten sam sposób można podłączyć rzeczywiste źródła (IMGW, PSP,
 | Klucz | Zawartość |
 |---|---|
 | `meta` | wersja zbioru, data scenariusza, znacznik `synthetic: true` |
-| `areas` | GeoJSON `FeatureCollection` w lokalnym układzie płaskim 800×560: 8 jednostek z populacją syntetyczną i udziałem w strefie zagrożenia w fazach `T1`/`T2` |
+| `areas` | GeoJSON `FeatureCollection`: 8 prawdziwych powiatów woj. małopolskiego (granice PRG, zrzutowane do układu 800×560) z populacją syntetyczną i udziałem w strefie zagrożenia w fazach `T1`/`T2` |
 | `hazardZones` | poligon strefy zagrożenia w fazach T1 (17:56) i T2 (18:30) |
 | `incidents` | zgłoszenia punktowe (PSP, WCZK, media) z fazą i statusem weryfikacji |
-| `sources` | 17 meldunków źródłowych: `source, time, verification` (`verified` = zweryfikowane; `pending` / `quarantined` = niezweryfikowane) |
-| `events` | 14 zdarzeń; zdarzenie główne zawiera reguły terminologii, okna ważności i szablony rekomendacji |
+| `sources` | 17 meldunków źródłowych: `source, time, areaIds, verification` (`verified` = zweryfikowane; `pending` / `quarantined` = niezweryfikowane). Pole `expertEventId` służy wyłącznie testom — przypisanie do zdarzeń liczy `correlate.js` |
+| `feeds` | kanały danych (IMGW, PSP, WCZK, operatorzy, media) z czasem ostatnich danych i procedurą zastępczą na wypadek awarii |
+| `events` | 9 zdarzeń; zdarzenie główne zawiera reguły terminologii, okna ważności i szablony rekomendacji |
 | `alerts` | projekty i wysłane komunikaty (5) |
 | `testVariants` | warianty stanów błędów dla edytora |
-| `distribution` | operatorzy z udziałem i skutecznością dostarczenia (synt.) |
+| `distribution` | operatorzy z udziałem, skutecznością i czasem dostarczenia (mediana, 95% odbiorców; synt.) |
 | `afterActionReports`, `benchmarks` | raporty historyczne, demo benchmark, KPI, uczenie się systemu |
 
 ## Maszyna stanów scenariusza
@@ -91,8 +96,8 @@ Docelowo w ten sam sposób można podłączyć rzeczywiste źródła (IMGW, PSP,
 | 4 → 5 | „Zastosuj rekomendację” | 18:08 | wynik 92/100 |
 | 5 → 6 | „Przekaż do zatwierdzenia” | 18:08 | panel zatwierdzenia |
 | 6 → 7 | potwierdzenie + „Zatwierdź i symuluj wysyłkę” | 18:09/18:10 | symulowana dystrybucja, zasięg 92% |
-| 7 → 8 | NASTĘPNY ETAP SCENARIUSZA | 18:30/18:32 | nowe dane, pokrycie spada do 83%, rekomendacja aktualizacji |
-| 8 → 9 | „Otwórz proces aktualizacji” | 18:32 | projekt ALR-1042-02 (+ pow. lipnicki, do 23:00) |
+| 7 → 8 | „Pobierz nowe dane źródłowe (18:30)” | 18:30/18:32 | nowe dane, pokrycie spada do 83%, rekomendacja aktualizacji |
+| 8 → 9 | „Otwórz proces aktualizacji” | 18:32 | projekt ALR-1042-02 (+ pow. limanowski, do 23:00) |
 | 9 → 10 | analiza → przegląd → zatwierdzenie | 18:33–18:36 | wysłana aktualizacja |
 | 10 → 11 | „Zamknij zdarzenie” | 19:15 | raport AAR-1042 |
 | 11 → 12 | otwarcie raportu | 19:20 | koniec scenariusza |

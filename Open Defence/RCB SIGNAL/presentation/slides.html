@@ -57,6 +57,7 @@
   .tl-item .t { font: 700 20px/1 "Roboto Mono", monospace; margin-bottom: 8px; }
   .tl-item .d { font-size: 15px; line-height: 1.35; }
 
+  .kicker { font: 700 14px/1 "Roboto Mono", monospace; letter-spacing: 0.16em; color: #6b1ff0; margin-bottom: 14px; position: relative; z-index: 3; }
   .card { position: absolute; background: #fff; border-radius: 14px; box-shadow: 0 8px 26px rgba(30, 10, 90, 0.16); overflow: hidden; z-index: 3; }
 </style>
 </head>
@@ -104,7 +105,8 @@
   <div class="logo" style="left:132px;top:150px"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
   <div class="rule" style="left:132px;top:215px;width:770px"></div>
   <div class="content" style="left:132px;top:248px;width:800px">
-    <h1 style="font-size:50px;line-height:1.12">Warstwa decyzyjna<br>dla systemu<br>ostrzegania ludności</h1>
+    <h1 style="font-size:58px;line-height:1.1">Od alertu<br>do działania</h1>
+    <p class="body" style="margin-top:18px;font-size:21px">System wspomagania decyzji dla RCB, który odbudowuje zaufanie do ostrzeżeń</p>
   </div>
   <div class="rule" style="left:132px;top:462px;width:770px"></div>
   <div class="content" style="left:132px;top:484px;width:820px">
@@ -113,58 +115,67 @@
   </div>
 </section>
 
-<!-- ============================================================ 2. DLACZEGO -->
+<!-- ============================================================ 2. CASE -->
 <section class="slide">
   <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
   <div class="rule" style="left:72px;top:76px;width:580px"></div>
   <div class="wash" style="left:-220px;bottom:-260px;width:620px;height:560px;background:radial-gradient(closest-side, rgba(90,70,255,.7), rgba(150,130,255,.3) 55%, transparent)"></div>
-  <div class="content" style="left:72px;top:140px;width:580px">
-    <h1 class="h-xl">Dlaczego<br>to ważne?</h1>
+  <div class="content" style="left:72px;top:104px;width:600px">
+    <div class="kicker">01 · CASE</div>
+    <h1 class="h-xl" style="font-size:48px">Alerty RCB<br>tracą sens</h1>
   </div>
-  <div class="content rows" style="left:72px;top:316px;width:580px">
-    <div><p class="body" style="font-size:18.5px">Alert RCB trafia do wszystkich telefonów w obszarze zagrożenia. Ma sens tylko wtedy, gdy odbiorca <b>zrozumie, uwierzy i wie, co zrobić</b>.</p></div>
-    <div><p class="body" style="font-size:18.5px">Dyżurny działa pod presją czasu: meldunki IMGW, PSP i WCZK przychodzą osobno, a SMS to <b>160 znaków, bez polskich liter</b>, z dokładnością do powiatu.</p></div>
-    <div><p class="body" style="font-size:18.5px">Komunikat ogólny, bez instrukcji lub nieaktualny osłabia zaufanie do kolejnych ostrzeżeń (<i>alert fatigue</i>).</p></div>
+  <div class="content rows" style="left:72px;top:262px;width:580px">
+    <div><p class="body" style="font-size:17.5px">Komunikaty są <b>chaotyczne, nieprecyzyjne i mylące</b> — często nie wiadomo, co właściwie trzeba zrobić.</p></div>
+    <div><p class="body" style="font-size:17.5px">Przychodzi ich <b>zbyt wiele</b>, także mało istotnych. Ludzie mają dość systemu.</p></div>
+    <div><p class="body" style="font-size:17.5px"><b>Nie każdy dostaje każdy alert</b>, a osoby w tym samym miejscu dostają ten sam alert <b>w różnym czasie</b>.</p></div>
+  </div>
+  <div class="content" style="left:72px;top:524px;width:580px;padding:16px 20px;border-left:5px solid #6b1ff0;background:rgba(107,31,240,.07)">
+    <p class="body" style="font-size:18px"><b>Cel:</b> żeby ludzie znów uwierzyli w sens alertów i zaangażowali się we wspólne bezpieczeństwo.</p>
   </div>
   <!-- prawa strona: przykład słabego alertu -->
   <div class="content" style="left:720px;top:0;width:560px;height:720px;background:linear-gradient(160deg,#1a00ff 0%,#7b2ff0 45%,#ff5f8a 100%)">
-    <div style="position:absolute;left:90px;top:110px;width:380px;height:520px;border-radius:44px;background:#0d0d18;padding:14px;box-shadow:0 30px 60px rgba(0,0,0,.35)">
+    <div style="position:absolute;left:90px;top:100px;width:380px;height:520px;border-radius:44px;background:#0d0d18;padding:14px;box-shadow:0 30px 60px rgba(0,0,0,.35)">
       <div style="width:100%;height:100%;border-radius:32px;background:#f4f5f8;padding:46px 22px 22px">
         <div class="mono" style="font-size:12px;letter-spacing:.1em;color:#666;margin-bottom:10px">ALERT RCB · TERAZ</div>
-        <div class="sms" style="background:#fff;border:1px solid #ddd">Alert RCB: Dzis wieczorem intensywne opady deszczu w powiecie nadrzeczanskim. Mozliwe lokalne podtopienia. Zachowaj ostroznosc.</div>
+        <div class="sms" style="background:#fff;border:1px solid #ddd">Alert RCB: Dzis wieczorem intensywne opady deszczu w powiecie nowosadeckim. Mozliwe lokalne podtopienia. Zachowaj ostroznosc.</div>
         <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px">
           <div class="pill" style="border-color:#c01a2e;color:#c01a2e;align-self:flex-start">Do kiedy?</div>
           <div class="pill" style="border-color:#c01a2e;color:#c01a2e;align-self:flex-start">Co mam zrobić?</div>
-          <div class="pill" style="border-color:#1d7a3c;color:#1d7a3c;align-self:flex-start">Co i gdzie — OK</div>
+          <div class="pill" style="border-color:#c01a2e;color:#c01a2e;align-self:flex-start">Czy to mnie dotyczy?</div>
         </div>
-        <div class="small" style="margin-top:22px;color:#444">Przykładowy projekt komunikatu (dane syntetyczne)</div>
+        <div class="small" style="margin-top:22px;color:#444">Przykład typowego komunikatu: wiadomo „co”, ale nie „do kiedy” ani „co robić”.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================ 3. KTO -->
+<!-- ============================================================ 3. PROBLEM -->
 <section class="slide">
   <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
-  <div class="rule" style="left:72px;top:76px;width:1060px"></div>
-  <div class="rule" style="left:72px;top:672px;width:1060px"></div>
-  <div class="vrule" style="left:470px;top:76px;height:596px"></div>
-  <svg class="blob" style="right:0;top:0;width:150px;height:440px"><use href="#edgeR" fill="url(#gPink)"/></svg>
-  <div class="wash" style="left:-200px;bottom:-240px;width:560px;height:520px;background:radial-gradient(closest-side, rgba(110,80,255,.55), transparent)"></div>
-  <svg class="blob" style="left:0;bottom:0;width:220px;height:300px"><use href="#edgeL" fill="url(#gBlue)"/></svg>
-  <div class="content" style="left:72px;top:240px;width:380px;text-align:center">
-    <h1 class="h-xl">Kto<br>korzysta?</h1>
-    <p class="body" style="margin-top:22px;font-size:18px">Narzędzie dla RCB.<br><b>Nie kolejna aplikacja<br>dla obywatela.</b></p>
+  <div class="rule" style="left:72px;top:76px;width:1136px"></div>
+  <div class="wash" style="right:-200px;top:-260px;width:620px;height:520px;background:radial-gradient(closest-side, rgba(255,90,130,.4), transparent)"></div>
+  <div class="content" style="left:72px;top:100px;width:1136px;display:flex;justify-content:space-between;align-items:flex-end">
+    <div><div class="kicker">02 · PROBLEM</div><h1 class="h-lg" style="font-size:46px">Obywatele przestają słuchać</h1></div>
+    <p class="body" style="font-size:18px;text-align:right">Pięć źródeł problemu —<br><b>każde wymaga innej odpowiedzi</b></p>
   </div>
-  <div class="content" style="left:510px;top:196px;width:600px;display:grid;grid-template-columns:1fr 1fr;gap:64px 44px;text-align:center">
-    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:600">Dyżurny RCB</h3><p class="body" style="font-size:17.5px">Jeden obraz sytuacji zamiast wielu meldunków. Kontrola jakości komunikatu przed wysyłką.</p></div>
-    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:600">Służby źródłowe</h3><p class="body" style="font-size:17.5px">IMGW, PSP, WCZK — ich meldunki są łączone we wspólne zdarzenie i weryfikowane.</p></div>
-    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:600">Obywatel</h3><p class="body" style="font-size:17.5px">Korzysta pośrednio: dostaje krótszy, konkretny SMS z instrukcją. Bez instalowania czegokolwiek.</p></div>
-    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:600">Kierownictwo</h3><p class="body" style="font-size:17.5px">Raport po każdym zdarzeniu i mierzalna jakość ostrzegania, z pełnym dziennikiem decyzji.</p></div>
+  <div class="content" style="left:72px;top:222px;width:1136px">
+    <table class="grid" style="--fs:16.5px">
+      <tr><th style="width:18%">Obszar</th><th style="width:44%">Problem</th><th>Skutek</th></tr>
+      <tr><td class="lab">Treść</td><td>Nieprecyzyjne, niekompletne komunikaty</td><td>Odbiorca nie wie, co zrobić</td></tr>
+      <tr><td class="lab">Częstotliwość</td><td>Powtarzające się lub mało istotne ostrzeżenia</td><td>Zmęczenie alertami (<i>alert fatigue</i>)</td></tr>
+      <tr><td class="lab">Dystrybucja</td><td>Różny czas dostarczenia, brak części wiadomości</td><td>Nierówny dostęp do informacji</td></tr>
+      <tr><td class="lab">Koordynacja</td><td>Instytucje przekazują niespójne informacje</td><td>Dezorientacja i opóźnienia</td></tr>
+      <tr><td class="lab">Zaufanie</td><td>Brak informacji, co się wydarzyło i dlaczego wydano alert</td><td>Coraz mniej osób traktuje ostrzeżenia poważnie</td></tr>
+    </table>
+    <p class="small" style="margin-top:14px;font-size:15px">Ograniczenia, które respektujemy: alert tylko przy bezpośrednim <b>zagrożeniu życia lub zdrowia</b>, najmniejszy obszar to <b>powiat</b>, SMS ma <b>160 znaków bez polskich liter</b>.</p>
+  </div>
+  <div class="content" style="left:72px;top:594px;width:1136px;padding:14px 20px;border-left:5px solid #c01a2e;background:rgba(192,26,46,.06)">
+    <p class="body" style="font-size:17.5px">Sprawdziliśmy <b>9 prawdziwych Alertów RCB</b> (2020–2026): <b>8 z 9 nie mówi, do kiedy</b> obowiązuje zagrożenie, a jeden zamiast instrukcji zawiera tylko link.</p>
+    <p class="small" style="font-size:12.5px;color:#555;margin-top:2px">Treści alertów za hasłem „Alert RCB” w polskiej Wikipedii (z przypisami do mediów i RCB); ocena naszym walidatorem.</p>
   </div>
 </section>
 
-<!-- ============================================================ 4. ARCHITEKTURA -->
+<!-- ============================================================ 4. ROZWIĄZANIE -->
 <section class="slide">
   <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
   <div class="rule" style="left:72px;top:76px;width:1060px"></div>
@@ -173,166 +184,164 @@
   <svg class="blob" style="right:0;top:0;width:150px;height:440px"><use href="#edgeR" fill="url(#gPink)"/></svg>
   <div class="wash" style="left:-200px;bottom:-240px;width:560px;height:520px;background:radial-gradient(closest-side, rgba(110,80,255,.5), transparent)"></div>
   <svg class="blob" style="left:0;bottom:0;width:220px;height:300px"><use href="#edgeL" fill="url(#gBlue)"/></svg>
-  <div class="content" style="left:40px;top:250px;width:420px;text-align:center">
-    <h1 style="font-size:46px">Architektura<br>rozwiązania</h1>
-    <p class="body" style="margin-top:22px;font-size:18px">Zamknięta pętla:<br>każdy alert uczy system,<br>jak przygotować następny.</p>
+  <div class="content" style="left:40px;top:170px;width:420px;text-align:center">
+    <div class="kicker">03 · ROZWIĄZANIE</div>
+    <h1 style="font-size:44px">Od alertu<br>do działania</h1>
+    <p class="body" style="margin-top:22px;font-size:18px">Nie pytamy „jak wysłać lepszy SMS”, tylko <b>jak sprawić, żeby każdy alert prowadził do właściwego działania i budował zaufanie do następnego</b>.</p>
+    <p class="body" style="margin-top:16px;font-size:17px">System dla RCB, nie aplikacja dla obywatela. Nie zastępujemy Alertu RCB — <b>wykorzystujemy go lepiej</b>.</p>
+    <p class="body" style="margin-top:14px;font-size:16px;color:#333">Weryfikacja źródeł i koordynacja informacji w sytuacji kryzysowej.</p>
   </div>
-  <div class="content" style="left:520px;top:122px;width:580px">
-    <!-- moduły -->
-    <div style="display:flex;flex-direction:column;gap:24px">
-      <div style="display:grid;grid-template-columns:62px 1fr;gap:18px;align-items:center">
-        <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="29" fill="#2a00ff"/><text x="31" y="38" text-anchor="middle" font-family="Roboto Mono" font-weight="700" font-size="20" fill="#fff">01</text></svg>
-        <div><div class="mono" style="font-weight:700;font-size:18px;color:#2a00ff">SIGNAL INTELLIGENCE</div><div class="small" style="font-size:16px">Łączy meldunki IMGW, PSP i WCZK w jedno zdarzenie. Oznacza źródła niezweryfikowane.</div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:62px 1fr;gap:18px;align-items:center">
-        <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="29" fill="#6b1ff0"/><text x="31" y="38" text-anchor="middle" font-family="Roboto Mono" font-weight="700" font-size="20" fill="#fff">02</text></svg>
-        <div><div class="mono" style="font-weight:700;font-size:18px;color:#6b1ff0">SIGNAL GEO</div><div class="small" style="font-size:16px">Porównuje obszar zagrożenia z obszarem alertu (powiaty). Wskazuje luki w pokryciu.</div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:62px 1fr;gap:18px;align-items:center">
-        <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="29" fill="#b52cd9"/><text x="31" y="38" text-anchor="middle" font-family="Roboto Mono" font-weight="700" font-size="20" fill="#fff">03</text></svg>
-        <div><div class="mono" style="font-weight:700;font-size:18px;color:#b52cd9">SIGNAL WRITER</div><div class="small" style="font-size:16px">Sprawdza komunikat: co, gdzie, kiedy, co zrobić, limit 160 znaków, spójność ze źródłami.</div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:62px 1fr;gap:18px;align-items:center">
-        <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="29" fill="#e83a78"/><text x="31" y="38" text-anchor="middle" font-family="Roboto Mono" font-weight="700" font-size="20" fill="#fff">04</text></svg>
-        <div><div class="mono" style="font-weight:700;font-size:18px;color:#d0185f">SIGNAL COMMAND</div><div class="small" style="font-size:16px">Panel dyżurnego. <b>AI rekomenduje, człowiek decyduje</b> — zatwierdzenie z uzasadnieniem.</div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:62px 1fr;gap:18px;align-items:center">
-        <svg width="62" height="62" viewBox="0 0 62 62"><circle cx="31" cy="31" r="29" fill="#c01a2e"/><text x="31" y="38" text-anchor="middle" font-family="Roboto Mono" font-weight="700" font-size="20" fill="#fff">05</text></svg>
-        <div><div class="mono" style="font-weight:700;font-size:18px;color:#c01a2e">SIGNAL FEEDBACK</div><div class="small" style="font-size:16px">Wykrywa zmianę sytuacji, rekomenduje aktualizację, tworzy raport po zdarzeniu.</div></div>
-      </div>
+  <div class="content" style="left:510px;top:118px;width:600px">
+    <table class="grid" style="--fs:15.5px">
+      <tr><th style="width:46%">Standardowe podejście</th><th>RCB SIGNAL</th></tr>
+      <tr><td>Aplikacja dla obywatela</td><td><b>Narzędzie operacyjne dla RCB</b></td></tr>
+      <tr><td>Kolejny kanał powiadomień</td><td><b>Lepsza obsługa istniejących alertów</b></td></tr>
+      <tr><td>Generator SMS</td><td><b>Kontrola kompletności, spójności i wykonalności instrukcji</b></td></tr>
+      <tr><td>Mapa zagrożeń</td><td><b>Zagrożenie w kontekście już wydanych ostrzeżeń</b></td></tr>
+      <tr><td>Liczenie wysłanych alertów</td><td><b>Pomiar jakości i efektów ostrzegania</b></td></tr>
+      <tr><td>Jednorazowe usprawnienie</td><td><b>Uczenie się na kolejnych zdarzeniach</b></td></tr>
+      <tr><td>Automatyzacja decyzji</td><td><b>AI rekomenduje, człowiek decyduje</b></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ 5. PĘTLA ZAUFANIA -->
+<section class="slide">
+  <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
+  <div class="rule" style="left:72px;top:76px;width:1136px"></div>
+  <div class="wash" style="left:220px;bottom:-330px;width:840px;height:460px;background:radial-gradient(closest-side, rgba(70,50,255,.6), rgba(140,120,255,.25) 55%, transparent)"></div>
+  <div class="content" style="left:72px;top:100px;width:1136px;display:flex;justify-content:space-between;align-items:flex-end">
+    <div><div class="kicker">03 · ROZWIĄZANIE</div><h1 class="h-lg" style="font-size:46px">Zamknięta pętla zaufania</h1></div>
+    <p class="body" style="font-size:18px;text-align:right">Każde zdarzenie poprawia<br><b>następne ostrzeżenie</b></p>
+  </div>
+  <div class="content" style="left:72px;top:218px;width:1136px;display:grid;grid-template-columns:repeat(5,1fr);gap:16px">
+    <div style="border-top:5px solid #2a00ff;padding-top:12px"><div class="mono" style="font-weight:700;color:#2a00ff">01 WYKRYCIE</div><p class="small" style="margin-top:8px;font-size:15.5px">Meldunki IMGW, PSP, WCZK łączone w jedną kartę zdarzenia. Plotki oznaczone jako niezweryfikowane.</p><div class="mono" style="font-size:12px;margin-top:8px;color:#555">SIGNAL INTELLIGENCE</div></div>
+    <div style="border-top:5px solid #6b1ff0;padding-top:12px"><div class="mono" style="font-weight:700;color:#6b1ff0">02 PROJEKT</div><p class="small" style="margin-top:8px;font-size:15.5px">Kontrola komunikatu: co, gdzie, do kiedy, co zrobić, 160 znaków, zgodność ze źródłami.</p><div class="mono" style="font-size:12px;margin-top:8px;color:#555">SIGNAL WRITER</div></div>
+    <div style="border-top:5px solid #b52cd9;padding-top:12px"><div class="mono" style="font-weight:700;color:#b52cd9">03 DECYZJA</div><p class="small" style="margin-top:8px;font-size:15.5px">Mapa zagrożenia vs obszar alertu. Dyżurny zatwierdza z uzasadnieniem — wszystko w dzienniku.</p><div class="mono" style="font-size:12px;margin-top:8px;color:#555">SIGNAL GEO · COMMAND</div></div>
+    <div style="border-top:5px solid #e83a78;padding-top:12px"><div class="mono" style="font-weight:700;color:#d0185f">04 POMIAR</div><p class="small" style="margin-top:8px;font-size:15.5px">Raport dystrybucji per operator, zmiana sytuacji, nieaktualny alert → rekomendacja aktualizacji.</p><div class="mono" style="font-size:12px;margin-top:8px;color:#555">SIGNAL FEEDBACK</div></div>
+    <div style="border-top:5px solid #c01a2e;padding-top:12px"><div class="mono" style="font-weight:700;color:#c01a2e">05 NAUKA</div><p class="small" style="margin-top:8px;font-size:15.5px">Raport po zdarzeniu: powtarzające się błędy i zmiany w procedurach i komunikatach.</p><div class="mono" style="font-size:12px;margin-top:8px;color:#555">AFTER ACTION</div></div>
+  </div>
+  <div class="content" style="left:72px;top:470px;width:1136px">
+    <div class="mono" style="font-size:13px;letter-spacing:.08em;margin-bottom:10px">OBYWATELE W PĘTLI — BEZ NOWEJ APLIKACJI</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+      <div style="border-top:2px solid #111;padding-top:10px"><b>Badania zrozumiałości</b><p class="small" style="margin-top:4px">Testy komunikatów na panelach, także z osobami starszymi.</p></div>
+      <div style="border-top:2px solid #111;padding-top:10px"><b>Badania zaufania</b><p class="small" style="margin-top:4px">Regularne, niezależne ankiety z pomiarem bazowym.</p></div>
+      <div style="border-top:2px solid #111;padding-top:10px"><b>Samorządy</b><p class="small" style="margin-top:4px">Istniejące kanały gmin wyjaśniają, po co był alert.</p></div>
+      <div style="border-top:2px solid #111;padding-top:10px"><b>Raporty po zdarzeniach</b><p class="small" style="margin-top:4px">Publiczne podsumowanie: co się stało i dlaczego ostrzegano.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================ 5. WRITER -->
+<!-- ============================================================ 6. NARZĘDZIE: DEMO -->
 <section class="slide">
   <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
   <div class="rule" style="left:72px;top:76px;width:1136px"></div>
-  <div class="wash" style="right:-200px;top:-260px;width:620px;height:520px;background:radial-gradient(closest-side, rgba(255,90,130,.45), transparent)"></div>
-  <div class="content" style="left:72px;top:112px;width:1136px;display:flex;justify-content:space-between;align-items:flex-end">
-    <h1 class="h-lg">Kontrola jakości alertu</h1>
-    <p class="body" style="font-size:19px;text-align:right">Nie generator tekstu —<br><b>sprawdzian przed wysyłką</b></p>
+  <div class="wash" style="right:-200px;top:-260px;width:640px;height:520px;background:radial-gradient(closest-side, rgba(230,60,90,.45), transparent)"></div>
+  <div class="wash" style="left:-220px;bottom:-260px;width:600px;height:520px;background:radial-gradient(closest-side, rgba(90,70,255,.4), transparent)"></div>
+  <div class="content" style="left:72px;top:100px;width:760px">
+    <div class="kicker">04 · NARZĘDZIE</div>
   </div>
+  <div class="content" style="right:72px;top:96px;text-align:right"><h1 style="font-size:54px">Działające demo</h1></div>
   <!-- przed / po -->
-  <div class="content" style="left:72px;top:218px;width:540px">
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px"><span class="score" style="color:#a15800">78</span><span class="mono" style="font-size:13px;letter-spacing:.08em">/ 100 · PROJEKT</span></div>
-    <div class="sms" style="background:#fff4e0;border:1.5px solid #e2b56b;font-size:14.5px">Alert RCB: Dzis wieczorem intensywne opady deszczu w powiecie nadrzeczanskim. Mozliwe lokalne podtopienia. <u>Zachowaj ostroznosc.</u></div>
-    <p class="small" style="margin-top:8px;color:#7a4200">Brak godziny zakończenia · instrukcja zbyt ogólna</p>
-    <div style="display:flex;align-items:center;gap:14px;margin:20px 0 10px"><span class="score" style="color:#1d7a3c">92</span><span class="mono" style="font-size:13px;letter-spacing:.08em">/ 100 · PO REKOMENDACJI SIGNAL</span></div>
-    <div class="sms" style="background:#e6f3ea;border:1.5px solid #a9d6b7;font-size:14.5px">Alert RCB: <u>Do 22:00</u> intensywne opady i podtopienia w pow. nadrzeczanskim. <u>Nie wjezdzaj na zalane drogi. Przenies cenne rzeczy wyzej.</u> Zagrozenie zycia: 112</div>
-    <p class="small" style="margin-top:8px;color:#155d2d">154/160 znaków · bez polskich liter · operator może dalej edytować</p>
+  <div class="content" style="left:72px;top:212px;width:540px">
+    <div class="mono" style="font-size:13px;letter-spacing:.08em;margin-bottom:12px">KONTROLA JAKOŚCI PRZED WYSYŁKĄ</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px"><span class="score" style="color:#a15800;font-size:40px">78</span><span class="mono" style="font-size:13px;letter-spacing:.08em">/ 100 · PROJEKT</span></div>
+    <div class="sms" style="background:#fff4e0;border:1.5px solid #e2b56b;font-size:14px">Alert RCB: Dzis wieczorem intensywne opady deszczu w powiecie nowosadeckim. Mozliwe lokalne podtopienia. <u>Zachowaj ostroznosc.</u></div>
+    <p class="small" style="margin-top:6px;color:#7a4200;font-size:14px">Brak godziny zakończenia · instrukcja zbyt ogólna</p>
+    <div style="display:flex;align-items:center;gap:14px;margin:16px 0 8px"><span class="score" style="color:#1d7a3c;font-size:40px">92</span><span class="mono" style="font-size:13px;letter-spacing:.08em">/ 100 · PO REKOMENDACJI SIGNAL</span></div>
+    <div class="sms" style="background:#e6f3ea;border:1.5px solid #a9d6b7;font-size:14px">Alert RCB: <u>Do 22:00</u> intensywne opady i podtopienia w pow. nowosadeckim. <u>Nie wjezdzaj na zalane drogi. Przenies cenne rzeczy wyzej.</u> Zagrozenie zycia: 112</div>
+    <p class="small" style="margin-top:6px;font-size:14px">7 kryteriów (co, gdzie, kiedy, co zrobić, 160 znaków, zgodność, czytelność), silnik regułowy: ten sam tekst = ten sam wynik. Błędy blokujące uniemożliwiają zatwierdzenie.</p>
   </div>
-  <!-- kryteria -->
-  <div class="content" style="left:660px;top:218px;width:548px">
-    <table class="grid">
-      <tr><th style="width:44%">Kryterium</th><th style="width:20%">Waga</th><th>Pytanie</th></tr>
-      <tr><td class="mono"><b>WHAT</b></td><td style="text-align:center">12</td><td>Co się dzieje?</td></tr>
-      <tr><td class="mono"><b>WHERE</b></td><td style="text-align:center">15</td><td>Gdzie?</td></tr>
-      <tr><td class="mono"><b>WHEN</b></td><td style="text-align:center">15</td><td>Od kiedy i do kiedy?</td></tr>
-      <tr><td class="mono"><b>ACTION</b></td><td style="text-align:center">25</td><td>Co mam zrobić?</td></tr>
-      <tr><td class="mono"><b>LENGTH</b></td><td style="text-align:center">10</td><td>160 znaków, GSM-7</td></tr>
-      <tr><td class="mono"><b>CONSISTENCY</b></td><td style="text-align:center">15</td><td>Zgodne ze źródłami?</td></tr>
-      <tr><td class="mono"><b>CLARITY</b></td><td style="text-align:center">8</td><td>Bez skrótów?</td></tr>
+  <!-- MVP -->
+  <div class="content" style="left:672px;top:212px;width:536px">
+        <table class="grid" style="--fs:15px">
+      <tr><td style="width:44px;text-align:center;font-weight:700;color:#1d7a3c">✓</td><td><b>Panel aktywnych zdarzeń</b> z wielu źródeł</td></tr>
+      <tr><td style="text-align:center;font-weight:700;color:#1d7a3c">✓</td><td><b>Karta sytuacyjna</b>: meldunki w jednym zdarzeniu, weryfikacja źródeł, duplikaty</td></tr>
+      <tr><td style="text-align:center;font-weight:700;color:#1d7a3c">✓</td><td><b>Walidator alertu</b>: 160 znaków, instrukcja, brakujące dane, rekomendacja</td></tr>
+      <tr><td style="text-align:center;font-weight:700;color:#1d7a3c">✓</td><td><b>Mapa powiatów</b>: strefa zagrożenia vs obszar alertu, pominięte powiaty</td></tr>
+      <tr><td style="text-align:center;font-weight:700;color:#1d7a3c">✓</td><td><b>Zatwierdzanie i historia</b>: uzasadnienie, różnice wersji, dziennik decyzji</td></tr>
+      <tr><td style="text-align:center;font-weight:700;color:#1d7a3c">✓</td><td><b>Raport po zdarzeniu</b>: KPI, błędy, jakość, podsumowanie dla mieszkańców</td></tr>
     </table>
-    <p class="small" style="margin-top:10px">Silnik regułowy: ten sam tekst = ten sam wynik. Ocenia konstrukcję komunikatu, nie prawdziwość informacji. Błędy blokujące (np. 173/160 znaków, brak instrukcji) uniemożliwiają zatwierdzenie.</p>
   </div>
 </section>
 
-<!-- ============================================================ 6. DEMO -->
+<!-- ============================================================ 7. NARZĘDZIE: PIĘĆ ODPOWIEDZI -->
 <section class="slide">
   <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
   <div class="rule" style="left:72px;top:76px;width:1136px"></div>
-  <div class="rule" style="left:72px;top:682px;width:1136px"></div>
-  <div class="wash" style="right:-200px;top:-260px;width:640px;height:520px;background:radial-gradient(closest-side, rgba(230,60,90,.5), transparent)"></div>
-  <div class="wash" style="left:-220px;bottom:-260px;width:600px;height:520px;background:radial-gradient(closest-side, rgba(230,70,90,.45), transparent)"></div>
-  <div class="content" style="left:72px;top:104px;width:760px">
-    <p class="body" style="font-size:18px"><u>github.com/MoAI-PL/HackYeah-2026-Krakow</u></p>
-    <p class="mono" style="font-size:14px;margin-top:6px;color:#333">Open Defence/RCB SIGNAL → <b>python3 server.py</b> → localhost:8080 → ▶ START DEMO</p>
+  <div class="wash" style="right:-200px;top:-260px;width:620px;height:520px;background:radial-gradient(closest-side, rgba(255,90,130,.35), transparent)"></div>
+  <div class="content" style="left:72px;top:100px;width:1136px;display:flex;justify-content:space-between;align-items:flex-end">
+    <div><div class="kicker">04 · NARZĘDZIE</div><h1 class="h-lg" style="font-size:44px">Pięć problemów, pięć odpowiedzi</h1></div>
   </div>
-  <div class="content" style="right:72px;top:96px"><h1 style="font-size:70px">Demo</h1></div>
-  <div class="shot content" style="left:72px;top:188px;width:770px"><img src="img/writer-78.png" alt=""></div>
-  <div class="shot content" style="left:870px;top:188px;width:338px"><img src="img/map.png" alt=""></div>
-  <div class="shot content" style="left:870px;top:420px;width:338px"><img src="img/aar.png" alt=""></div>
-  <div class="content small" style="left:870px;top:640px;width:338px;font-size:13px;color:#333">Mapa SIGNAL GEO · raport po zdarzeniu</div>
-</section>
-
-<!-- ============================================================ 7. SCENARIUSZ -->
-<section class="slide">
-  <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
-  <div class="rule" style="left:72px;top:76px;width:1136px"></div>
-  <svg class="blob" style="left:-60px;bottom:-120px;width:420px;height:300px"><use href="#b4" fill="url(#gBlue)" transform="scale(-1,1) translate(-420,0)"/></svg>
-  <svg class="blob" style="right:-80px;bottom:-140px;width:460px;height:320px"><use href="#b4" fill="url(#gRed)"/></svg>
-  <div class="content" style="left:72px;top:112px;width:1136px;display:flex;justify-content:space-between;align-items:flex-end">
-    <h1 class="h-lg">Scenariusz: podtopienia</h1>
-    <p class="body" style="font-size:19px;text-align:right">Jedno zdarzenie,<br><b>cały cykl ostrzegania</b></p>
+  <div class="content" style="left:72px;top:208px;width:1136px;display:grid;grid-template-columns:repeat(5,1fr);gap:16px">
+    <div style="border-top:5px solid #2a00ff;padding-top:10px"><div class="mono" style="font-weight:700;color:#2a00ff">TREŚĆ</div><p class="small" style="margin-top:6px;font-size:15px">Walidator 7 kryteriów i rekomendacja konkretnej instrukcji: <b>78 → 92</b>.</p></div>
+    <div style="border-top:5px solid #6b1ff0;padding-top:10px"><div class="mono" style="font-weight:700;color:#6b1ff0">CZĘSTOTLIWOŚĆ</div><p class="small" style="margin-top:6px;font-size:15px">Inne alerty w tych powiatach z 7 dni i rekomendacja odwołania nieaktualnego. Duplikat: <b>połącz albo rozdziel</b> — decyduje człowiek.</p></div>
+    <div style="border-top:5px solid #b52cd9;padding-top:10px"><div class="mono" style="font-weight:700;color:#b52cd9">DYSTRYBUCJA</div><p class="small" style="margin-top:6px;font-size:15px">Raport czasu dostarczenia per operator. Ostrzeżenie, gdy ludzie w tym samym powiecie dostają alert <b>w różnym czasie</b>.</p></div>
+    <div style="border-top:5px solid #e83a78;padding-top:10px"><div class="mono" style="font-weight:700;color:#d0185f">KOORDYNACJA</div><p class="small" style="margin-top:6px;font-size:15px">Meldunki IMGW, PSP, WCZK w jednym zdarzeniu; <b>zgodność alertu ze źródłami</b> (np. godzina 22:00 vs 23:00).</p></div>
+    <div style="border-top:5px solid #c01a2e;padding-top:10px"><div class="mono" style="font-weight:700;color:#c01a2e">ZAUFANIE</div><p class="small" style="margin-top:6px;font-size:15px">Po zdarzeniu: <b>podsumowanie dla mieszkańców</b> — co się stało i dlaczego ostrzegano. Plotki nie trafiają do alertu.</p></div>
   </div>
-  <div class="tl"></div>
-  <div class="tl-item" style="left:72px;top:261px"><div class="dot"></div><div class="t">17:42</div><div class="d">IMGW, PSP i WCZK zgłaszają opady i podtopienia</div></div>
-  <div class="tl-item" style="left:215px;top:261px"><div class="dot" style="border-color:#2a00ff;background:#2a00ff"></div><div class="t">17:56</div><div class="d">SIGNAL łączy 3 źródła w jedno zdarzenie</div></div>
-  <div class="tl-item" style="left:358px;top:261px"><div class="dot" style="border-color:#a15800"></div><div class="t">18:07</div><div class="d">Analiza projektu alertu: <b>78/100</b></div></div>
-  <div class="tl-item" style="left:501px;top:261px"><div class="dot" style="border-color:#1d7a3c;background:#1d7a3c"></div><div class="t">18:08</div><div class="d">Operator stosuje rekomendację: <b>92/100</b></div></div>
-  <div class="tl-item" style="left:644px;top:261px"><div class="dot" style="border-color:#1d7a3c;background:#1d7a3c"></div><div class="t">18:10</div><div class="d">Zatwierdzenie i symulowana dystrybucja</div></div>
-  <div class="tl-item" style="left:787px;top:261px"><div class="dot" style="border-color:#c01a2e;background:#c01a2e"></div><div class="t">18:32</div><div class="d">Zmiana sytuacji: pokrycie spada z 96% do 83%</div></div>
-  <div class="tl-item" style="left:930px;top:261px"><div class="dot" style="border-color:#1d7a3c;background:#1d7a3c"></div><div class="t">18:36</div><div class="d">Aktualizacja: + pow. lipnicki, do 23:00</div></div>
-  <div class="tl-item" style="left:1073px;top:261px"><div class="dot" style="border-color:#6b1ff0;background:#6b1ff0"></div><div class="t">19:20</div><div class="d">Raport po zdarzeniu z dziennika decyzji</div></div>
-  <div class="content rows" style="left:72px;top:468px;width:760px">
-    <div><p class="body" style="font-size:18px">Niezweryfikowana informacja („zerwany most”) zostaje oznaczona i <b>nie trafia do komunikatu</b>.</p></div>
-    <div><p class="body" style="font-size:18px">Po zmianie sytuacji SIGNAL sam wskazuje, że wysłany alert jest nieaktualny — <b>decyzję o aktualizacji podejmuje dyżurny</b>.</p></div>
+  <div class="content" style="left:72px;top:372px;width:1136px;font-size:15.5px"><b>Odporność:</b> gdy źródło danych przestaje odpowiadać, SIGNAL oznacza ocenę jako niepełną, podaje procedurę zastępczą, a dyżurny pracuje dalej — silnik działa lokalnie.</div>
+  <div class="shot content" style="left:72px;top:412px;width:360px;height:216px"><img src="img/load.png" alt="" style="height:100%;object-fit:contain;object-position:center;background:#fff"></div>
+  <div class="shot content" style="left:460px;top:412px;width:360px;height:216px"><img src="img/delivery.png" alt="" style="height:100%;object-fit:contain;object-position:center;background:#fff"></div>
+  <div class="shot content" style="left:848px;top:412px;width:360px;height:216px"><img src="img/citizen.png" alt="" style="height:100%;object-fit:contain;object-position:center;background:#fff"></div>
+  <div class="content small" style="left:72px;top:640px;width:1136px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px;font-size:13px;color:#333">
+    <span>Inne alerty w powiatach i plan odwołania</span><span>Czas dostarczenia per operator (symulacja)</span><span>Podsumowanie dla mieszkańców z raportu</span>
   </div>
 </section>
 
-<!-- ============================================================ 8. BEZPIECZEŃSTWO -->
+<!-- ============================================================ 8. RYZYKA I BEZPIECZEŃSTWO -->
 <section class="slide">
   <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
   <div class="rule" style="left:72px;top:76px;width:1136px"></div>
   <div class="rule" style="left:72px;top:682px;width:1136px"></div>
   <div class="wash" style="left:220px;bottom:-330px;width:840px;height:460px;background:radial-gradient(closest-side, rgba(70,50,255,.75), rgba(140,120,255,.3) 55%, transparent)"></div>
-  <div class="content" style="left:72px;top:112px;width:1136px;display:flex;justify-content:space-between;align-items:flex-end">
-    <h1 class="h-lg">Bezpieczeństwo</h1>
+  <div class="content" style="left:72px;top:100px;width:1136px;display:flex;justify-content:space-between;align-items:flex-end">
+    <div><div class="kicker">04 · NARZĘDZIE</div><h1 class="h-lg">Ryzyka pod kontrolą</h1></div>
     <p class="body" style="font-size:20px">Czy można temu zaufać?</p>
   </div>
-  <div class="content" style="left:72px;top:212px;width:1136px">
-    <table class="grid big" style="--fs:18px">
-      <tr><th>Człowiek decyduje</th><th>Wiarygodność danych</th><th>Bezpieczeństwo systemu</th></tr>
-      <tr>
-        <td>AI nie może samodzielnie wysłać, odwołać ani zmienić obszaru alertu. Zatwierdzenie wymaga potwierdzenia i uzasadnienia operatora.</td>
-        <td>Źródło jest <b>zweryfikowane</b> albo <b>niezweryfikowane</b> — bez sztucznych procentów. Zdarzenie potwierdzają min. 2 niezależne służby.</td>
-        <td>Treść zgłoszeń to wyłącznie dane: próba wstrzyknięcia poleceń (<i>prompt injection</i>) trafia do kwarantanny.</td>
-      </tr>
-      <tr>
-        <td>Dziennik audytu dla każdej decyzji: <b>kto · kiedy · co · dlaczego · na podstawie czego</b>.</td>
-        <td>Wynik jakości liczy deterministyczny silnik regułowy. LLM (opcjonalny) daje tylko opinię doradczą.</td>
-        <td>Brak danych osobowych — wyłącznie dane zagregowane. W demo dane są syntetyczne, a wysyłka tylko symulowana.</td>
-      </tr>
+  <div class="content" style="left:72px;top:216px;width:1136px">
+    <table class="grid" style="--fs:15.5px">
+      <tr><th style="width:36%">Ryzyko</th><th>Jak je ograniczamy</th></tr>
+      <tr><td>AI wymyśla niepotwierdzone informacje</td><td>Rekomendacje tylko z <b>zatwierdzonych danych</b>; wynik liczy deterministyczny silnik reguł, LLM jest <b>wyłącznie doradczy</b></td></tr>
+      <tr><td>Błędne łączenie różnych zagrożeń</td><td>Weryfikacja źródeł (min. 2 niezależne służby); możliwy duplikat wymaga <b>decyzji dyżurnego</b></td></tr>
+      <tr><td>Nadmierne poleganie na rekomendacjach</td><td>AI <b>nie wysyła, nie odwołuje i nie zmienia</b> obszaru; zatwierdzenie z uzasadnieniem i pełny dziennik</td></tr>
+      <tr><td>Nadmierna liczba alertów</td><td>Wspólna obsługa zdarzenia i wykrywanie duplikatów — <b>bez automatycznego tłumienia ostrzeżeń</b></td></tr>
+      <tr><td>Manipulacja treścią zgłoszeń</td><td>Treść źródeł to <b>dane, nie polecenia</b>: <i>prompt injection</i> trafia do kwarantanny</td></tr>
+      <tr><td>Prywatność i brak danych operatorów</td><td>Wyłącznie <b>dane zagregowane</b>; integracje z operatorami jako kolejny etap, dziś tryb symulacji</td></tr>
     </table>
   </div>
 </section>
 
-<!-- ============================================================ 9. MIERZALNOŚĆ + KROKI -->
+<!-- ============================================================ 9. KORZYŚĆ: MIERZALNOŚĆ -->
 <section class="slide">
   <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
-  <div class="rule" style="left:72px;top:76px;width:1060px"></div>
-  <div class="rule" style="left:72px;top:672px;width:1060px"></div>
-  <div class="vrule" style="left:470px;top:76px;height:596px"></div>
+  <div class="rule" style="left:72px;top:76px;width:1136px"></div>
   <svg class="blob" style="right:0;top:0;width:150px;height:440px"><use href="#edgeR" fill="url(#gPink)"/></svg>
-  <svg class="blob" style="left:0;bottom:0;width:220px;height:300px"><use href="#edgeL" fill="url(#gBlue)"/></svg>
-  <div class="content" style="left:72px;top:150px;width:380px;text-align:center">
-    <h1 class="h-xl">Dalsze<br>kroki</h1>
-    <div style="margin-top:30px;text-align:left;padding:0 26px">
-      <div class="mono" style="font-size:12.5px;letter-spacing:.08em;margin-bottom:10px">CELE PILOTAŻU — DO ZMIERZENIA</div>
-      <table style="width:100%;border-collapse:collapse;font-size:15.5px">
-        <tr><td style="padding:5px 0;border-bottom:1.5px solid #111">Kompletność komunikatów</td><td class="mono" style="text-align:right;border-bottom:1.5px solid #111"><b>≥ 95%</b></td></tr>
-        <tr><td style="padding:5px 0;border-bottom:1.5px solid #111">Zrozumienie instrukcji</td><td class="mono" style="text-align:right;border-bottom:1.5px solid #111"><b>+20 p.p.</b></td></tr>
-        <tr><td style="padding:5px 0;border-bottom:1.5px solid #111">Czas przygotowania</td><td class="mono" style="text-align:right;border-bottom:1.5px solid #111"><b>−30%</b></td></tr>
-        <tr><td style="padding:5px 0">Decyzje z pełnym audytem</td><td class="mono" style="text-align:right"><b>100%</b></td></tr>
-      </table>
-    </div>
+  <div class="content" style="left:72px;top:100px;width:1136px">
+    <div class="kicker">05 · KORZYŚĆ</div>
+    <h1 class="h-lg" style="font-size:46px">Mierzalnie lepsze ostrzeganie</h1>
   </div>
-  <div class="content" style="left:510px;top:186px;width:600px;display:grid;grid-template-columns:1fr 1fr;gap:64px 44px;text-align:center">
-    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:500">1. Walidacja</h3><p class="body" style="font-size:17px">Test historyczny na archiwalnych komunikatach i test zrozumiałości: co, gdzie, kiedy, co zrobić?</p></div>
-    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:500">2. Pilotaż</h3><p class="body" style="font-size:17px">Symulacja dyżuru: praca bez i z SIGNAL. Mierzymy czas, liczbę błędów i korekt.</p></div>
-    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:500">3. Integracja</h3><p class="body" style="font-size:17px">Adaptery do rzeczywistych źródeł (IMGW, PSP, WCZK) i granice powiatów z danych PRG.</p></div>
-    <div><h3 style="font-size:24px;margin:0 0 10px;font-weight:500">4. Wdrożenie</h3><p class="body" style="font-size:17px">Role i uprawnienia, audyt w bazie danych, procedury zgodne z KSC/NIS2, szkolenia.</p></div>
+  <div class="content" style="left:72px;top:218px;width:640px">
+    <table class="grid" style="--fs:15px">
+      <tr><th style="width:62%">Wskaźnik</th><th>Cel pilotażu</th></tr>
+      <tr><td>Komunikaty spełniające kryteria kontroli</td><td class="mono"><b>≥ 95%</b></td></tr>
+      <tr><td>Zrozumienie instrukcji vs komunikaty bazowe</td><td class="mono"><b>+20 p.p.</b></td></tr>
+      <tr><td>Mediana czasu przygotowania komunikatu</td><td class="mono"><b>−30%</b></td></tr>
+      <tr><td>Wykryte zdefiniowane błędy (zestaw testowy)</td><td class="mono"><b>≥ 90%</b></td></tr>
+      <tr><td>Alerty z raportem dystrybucji*</td><td class="mono"><b>100%</b></td></tr>
+      <tr><td>Zaufanie do alertów vs pomiar bazowy</td><td class="mono"><b>+10 p.p.</b></td></tr>
+    </table>
+    <p class="small" style="margin-top:8px;font-size:13px">Cele do zmierzenia w pilotażu, nie wyniki RCB. * o ile operatorzy udostępnią dane. Zaufanie mierzymy osobno — lepsze zrozumienie to jeszcze nie zaufanie.</p>
+  </div>
+  <div class="content" style="left:752px;top:218px;width:380px">
+    <div class="mono" style="font-size:13px;letter-spacing:.08em;margin-bottom:10px">JAK TO UDOWODNIMY</div>
+    <div class="rows">
+      <div style="padding:11px 0"><b>1. Test historyczny</b><p class="small" style="margin-top:3px">Archiwalne alerty vs wersje sprawdzone przez SIGNAL. Pierwszy wynik: 9 prawdziwych alertów, 8 bez „do kiedy”.</p></div>
+      <div style="padding:11px 0"><b>2. Eksperyment z odbiorcami</b><p class="small" style="margin-top:3px">Grupy dostają różne wersje: co, gdzie, co zrobić?</p></div>
+      <div style="padding:11px 0"><b>3. Symulacja dyżuru RCB</b><p class="small" style="margin-top:3px">Bez i z SIGNAL: czas, błędy, trafność decyzji.</p></div>
+      <div style="padding:11px 0"><b>4. Pilotaż obserwacyjny</b><p class="small" style="margin-top:3px">Bez wpływu na prawdziwe decyzje; wdrożenie dopiero po wynikach.</p></div>
+    </div>
+    <p class="small" style="margin-top:12px;font-size:14px">Później: <b>Cell Broadcast</b> jako dodatkowy kanał na problem opóźnień SMS — koncepcja od niego nie zależy.</p>
   </div>
 </section>
 
@@ -355,8 +364,9 @@
     <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#d1004a,#9b5cff);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">MK</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Maks Kozieł</div></div></div>
     <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#2a00ff,#b52cd9);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">PN</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Piotr Niemiec</div></div></div>
   </div>
+  <div class="content" style="left:120px;right:120px;top:482px;text-align:center"><p class="body" style="font-size:19px"><b>Następny krok:</b> pilotaż obserwacyjny z RCB i jednym WCZK — wdrożenie lokalne, bez chmury, działa offline.</p></div>
   <div class="content" style="left:200px;right:200px;top:536px;text-align:center;background:rgba(255,255,255,.85);border-radius:10px;padding:10px 14px">
-    <p class="small" style="font-size:13.5px;color:#222">Stos: Python (biblioteka standardowa) + JavaScript, bez zależności, działa offline. Dane w demo są syntetyczne.<br>Wykorzystanie AI: Claude (Anthropic) wspierał tworzenie kodu, dokumentacji i prezentacji; opcjonalny moduł LLM w aplikacji ma rolę doradczą.</p>
+    <p class="small" style="font-size:13.5px;color:#222">Stos: Python (biblioteka standardowa) + JavaScript, bez zależności, działa offline. Granice powiatów: PRG (GUGiK, przez ppatrzyk/polska-geojson, MIT); zdarzenia i dane w demo są fikcyjne; test historyczny na treściach Alertów RCB z Wikipedii.<br>Wykorzystanie AI: Claude (Anthropic) wspierał tworzenie kodu, dokumentacji i prezentacji; opcjonalny moduł LLM w aplikacji ma rolę doradczą.</p>
   </div>
 </section>
 

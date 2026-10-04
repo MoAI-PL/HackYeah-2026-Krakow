@@ -4,7 +4,7 @@ import * as store from '../store.js';
 import { analyze } from '../services.js';
 import { SMS_LIMIT } from '../analyzer.js';
 import { esc, pageHead, panel, tag, callout, pct, ico, scoreRing, animateScore, wordDiff, sleep, syntheticNote } from '../ui.js';
-import { mapSvg, geoPanel } from './map.js';
+import { geoPanel } from './map.js';
 
 const CRITERIA = [
   ['what', 'WHAT', 'Co się dzieje'],
@@ -29,30 +29,32 @@ function charRow(text) {
   const over = n > SMS_LIMIT;
   return `<div class="char-row">
     <div class="char-meter ${over ? 'over' : ''}" aria-hidden="true"><i style="width:${Math.min(100, (n / SMS_LIMIT) * 100)}%"></i></div>
-    <span class="char-count ${over ? 'over' : ''}" data-chars>ZNAKI: ${n} / ${SMS_LIMIT}</span>
+    <span class="char-count ${over ? 'over' : ''}" data-chars>${n} / ${SMS_LIMIT} znaków</span>
   </div>`;
 }
 
 function phonePreview(text) {
   return `<div class="phone-preview" aria-label="Podgląd wiadomości u odbiorcy">
-    <div class="from">ALERT RCB · PODGLĄD</div>
+    <div class="from">Alert RCB</div>
     <div class="bubble" data-preview>${esc(text) || '<span class="faint">—</span>'}</div>
   </div>`;
 }
 
 function qualityPanel(d) {
   if (busy === 'analyzing') {
-    return panel('Kontrola jakości', `<div class="callout-title mono" style="margin-bottom:12px;color:var(--accent)">ANALIZOWANIE…</div>
+    return panel('Kontrola jakości', `<div class="callout-title" style="margin-bottom:12px;color:var(--accent)">Analizuję komunikat…</div>
       <ol class="progress-steps" id="analysis-steps">
         ${['3 źródła zweryfikowane', 'Spójność geograficzna sprawdzona', 'Struktura komunikatu sprawdzona', 'Limit znaków i kodowanie sprawdzone'].map((l) => `<li><span class="ico">·</span>${l}</li>`).join('')}
       </ol>`);
   }
   const a = d.analysis;
   if (!a) {
-    return panel('Kontrola jakości', `<div class="muted">Komunikat nie został jeszcze przeanalizowany. Kliknij <b>ANALIZUJ</b>, aby sprawdzić kompletność (WHAT · WHERE · WHEN · ACTION), limit znaków i spójność ze źródłami.</div>
-      ${syntheticNote('Ocena dotyczy konstrukcji komunikatu — nie prawdziwości informacji')}`);
+    return panel('Kontrola jakości', `<div class="muted">Kliknij <b>Analizuj</b>, aby sprawdzić, czy komunikat mówi co, gdzie, kiedy i co zrobić, czy mieści się w limicie znaków i czy zgadza się ze źródłami.</div>
+`);
   }
   const stale = d.analyzedText !== d.text;
+  const out = store.outageFeed();
+  const outageBox = out && ['IMGW', 'PSP', 'WCZK'].includes(out.id) ? `<div style="margin-bottom:12px">${callout('warn', `Brak aktualnych danych: ${out.name}`, `Zgodność ze źródłami sprawdzono na ostatnich dostępnych danych${out.id === 'IMGW' ? ' (godzina zakończenia z ostatniego ostrzeżenia)' : ''}. ${esc(out.fallback)}.`)}</div>` : '';
   const hist = d.scoreHistory;
   const delta = hist.length > 1 ? hist[hist.length - 1] - hist[hist.length - 2] : 0;
   const crit = CRITERIA.map(([k, code, desc]) => {
@@ -63,14 +65,14 @@ function qualityPanel(d) {
       <div class="c-bar"><i style="width:${(c.points / c.max) * 100}%"></i></div>
     </div>`;
   }).join('');
-  const issues = a.issues.length ? `<ul class="checklist" style="margin-top:14px">${a.issues.map((i) => `<li>${ico(i.severity === 'error' ? 'fail' : i.severity)}<span><b class="mono" style="font-size:11px;letter-spacing:.08em">${esc(i.criterion)}</b> — ${esc(i.message)}</span></li>`).join('')}</ul>`
+  const issues = a.issues.length ? `<ul class="checklist" style="margin-top:14px">${a.issues.map((i) => `<li>${ico(i.severity === 'error' ? 'fail' : i.severity)}<span><b>${esc(i.criterion)}</b> — ${esc(i.message)}</span></li>`).join('')}</ul>`
     : `<div style="margin-top:14px">${callout('ok', 'Brak uwag', 'Komunikat spełnia wszystkie kryteria.')}</div>`;
   const blocking = a.issues.filter((i) => i.severity === 'error');
   const blockingBox = blocking.length ? `<div style="margin-top:12px">${callout('error', blocking.some((b) => b.criterion === 'LENGTH') ? `Przekroczony limit znaków — ${a.checks.length.chars} / ${SMS_LIMIT}` : blocking.some((b) => b.criterion === 'ACTION') ? 'Wymagana instrukcja działania' : 'Błąd blokujący', blocking.some((b) => b.criterion === 'ACTION') ? 'Odbiorca może nie wiedzieć, co zrobić. Zatwierdzenie zablokowane do czasu poprawy.' : 'Zatwierdzenie zablokowane do czasu poprawy.')}</div>` : '';
   const sugg = a.suggestion && a.suggestion !== d.text && d.status !== 'sent' ? `<div class="suggestion" style="margin-top:14px">
-      <div class="callout-title mono" style="color:var(--accent)">REKOMENDACJA SIGNAL</div>
+      <div class="callout-title" style="color:var(--accent)">Rekomendacja SIGNAL</div>
       <div class="s-text">${wordDiff(d.text, a.suggestion)}</div>
-      <div class="btn-row"><button class="btn primary" data-act="apply">Zastosuj rekomendację</button><span class="faint" style="font-size:12px">${[...a.suggestion].length}/${SMS_LIMIT} zn. · zapis bez polskich znaków (GSM-7) · operator może dalej edytować</span></div>
+      <div class="btn-row"><button class="btn primary" data-act="apply">Zastosuj rekomendację</button><span class="faint" style="font-size:13px">${[...a.suggestion].length}/${SMS_LIMIT} znaków, bez polskich znaków (GSM-7). Dyżurny może dalej edytować.</span></div>
     </div>` : '';
   const adv = advisory[d.id];
   const advBox = adv ? (adv.unavailable
@@ -79,20 +81,20 @@ function qualityPanel(d) {
         <p>${esc((adv.issues || []).join(' · ') || 'Brak dodatkowych uwag.')}</p>${adv.suggestion ? `<p class="mono">${esc(adv.suggestion)}</p>` : ''}</div></div>`) : '';
 
   return panel('Kontrola jakości', `<span id="quality-anchor"></span>
-    ${stale ? `<div style="margin-bottom:12px">${callout('warn', 'Treść zmieniona po analizie', 'Wynik dotyczy poprzedniej wersji. Kliknij ANALIZUJ ponownie.')}</div>` : ''}
+    ${outageBox}${stale ? `<div style="margin-bottom:12px">${callout('warn', 'Treść zmieniona po analizie', 'Wynik dotyczy poprzedniej wersji. Kliknij Analizuj ponownie.')}</div>` : ''}
     <div class="score-block">
       ${scoreRing(a.score, { id: 'score-ring', blocked: a.blocking })}
       <div>
         <div class="stat-label">Actionability score</div>
-        <div style="font-size:13px;margin-top:6px" class="muted">Kompletność i wykonalność komunikatu.<br>Silnik: <span class="mono">${esc(a.engine)}</span> (deterministyczny)</div>
+        <div style="font-size:14px;margin-top:6px" class="muted">Czy odbiorca wie, co się dzieje i co ma zrobić.<br>Ocena regułowa, deterministyczna.</div>
         ${a.blocking ? `<div class="score-delta" style="color:var(--red)">✕ Błąd blokujący — zatwierdzenie niemożliwe</div>` : ''}
         ${delta ? `<div class="score-delta">${delta > 0 ? '▲ +' : '▼ '}${delta} pkt względem poprzedniej wersji</div>` : ''}
-        ${hist.length > 1 ? `<div class="faint mono" style="font-size:11px;margin-top:6px">HISTORIA: ${hist.join(' → ')}</div>` : ''}
+        ${hist.length > 1 ? `<div class="faint" style="font-size:13px;margin-top:6px">Historia: ${hist.join(' → ')}</div>` : ''}
       </div>
     </div>
-    <div class="criteria" style="margin-top:16px">${crit}</div>
+    <details class="crit-details"${pendingAnim || a.blocking ? ' open' : ''}><summary>Szczegóły oceny (7 kryteriów)</summary><div class="criteria">${crit}</div></details>
     ${issues}${blockingBox}${sugg}${advBox}
-    ${syntheticNote('Ocena dotyczy konstrukcji komunikatu — nie prawdziwości informacji')}`, { right: tag(stale ? 'Nieaktualna' : 'Aktualna', stale ? 'amber' : 'green') });
+    ${syntheticNote('Ocena dotyczy konstrukcji komunikatu, nie prawdziwości informacji.')}`, { right: tag(stale ? 'Nieaktualna' : 'Aktualna', stale ? 'amber' : 'green') });
 }
 
 function approvalPanel(d) {
@@ -103,11 +105,11 @@ function approvalPanel(d) {
   const items = [
     ['Actionability', `${a.score} / 100`, a.score >= 90 ? 'pass' : 'warn'],
     ['Źródła faktograficzne', `${srcs} zweryf.`, srcs >= 2 ? 'pass' : 'warn'],
-    ['Walidacja GEO', geo.passed ? `OK · ${pct(geo.coverage)}` : `LUKA · ${pct(geo.coverage)}`, geo.passed ? 'pass' : 'warn'],
+    ['Walidacja GEO', geo.passed ? `OK, ${pct(geo.coverage)}` : `Luka, ${pct(geo.coverage)}`, geo.passed ? 'pass' : 'warn'],
     ['Limit znaków', `${len.chars} / ${SMS_LIMIT}`, len.status === 'fail' ? 'fail' : 'pass'],
   ];
   const defaultWhy = d.kind === 'update'
-    ? 'Rozszerzenie zagrożenia na pow. lipnicki (PSP, WCZK) i wydłużenie ostrzeżenia IMGW do 23:00.'
+    ? 'Rozszerzenie zagrożenia na pow. limanowski (PSP, WCZK) i wydłużenie ostrzeżenia IMGW do 23:00.'
     : 'Zagrożenie potwierdzone przez 3 niezależne źródła (IMGW, PSP, WCZK); ryzyko dla mienia i zdrowia.';
   return `<section class="panel" id="approval-panel" style="border-color:var(--green)">
     <header class="panel-head"><h2>Alert gotowy do zatwierdzenia · ${esc(d.id)}</h2>${tag('Wymagana decyzja operatora', 'amber')}</header>
@@ -119,8 +121,7 @@ function approvalPanel(d) {
       </label>
       <label class="confirm-row"><input type="checkbox" id="confirm"><span>Potwierdzam weryfikację treści, obszaru i źródeł. Rozumiem, że w środowisku demonstracyjnym wysyłka jest <b>wyłącznie symulowana</b>.</span></label>
       <div class="btn-row">
-        <button class="btn" data-act="edit">Edytuj</button>
-        <button class="btn" data-act="changes">Zwróć do poprawy</button>
+        <button class="btn" data-act="edit">Wróć do edycji</button>
         <span style="flex:1"></span>
         <button class="btn approve" data-act="approve" disabled>Zatwierdź i symuluj wysyłkę</button>
       </div>
@@ -138,14 +139,37 @@ function distributionPanel(rec) {
       <div class="pipeline">${['Walidacja', 'Zatwierdzono', 'Dystrybucja zainicjowana', 'Dostarczono (symulacja)'].map((l) => `<div class="p-step done">${l}</div>`).join('')}</div>
       <dl class="kv" style="margin:16px 0">
         <dt>Obszar docelowy</dt><dd>${esc(labels)}</dd>
-        <dt>Zatwierdzono</dt><dd class="mono">${esc(rec.approvedAt)} · ${store.OPERATOR.id}</dd>
-        <dt>Szacowany zasięg</dt><dd class="mono" style="font-size:20px;color:var(--accent)">${pct(rec.reach)}</dd>
+        <dt>Zatwierdzono</dt><dd>${esc(rec.approvedAt)} · ${store.OPERATOR.id}</dd>
+        <dt>Szacowany zasięg</dt><dd style="font-size:22px;color:var(--accent)">${pct(rec.reach)}</dd>
       </dl>
       <div class="stat-label" style="margin-bottom:6px">Raportowanie operatorów (symulacja)</div>
-      ${ops.map((o) => `<div class="op-row"><span class="mono">${esc(o.name)}</span><div class="op-bar"><i data-w="${o[rec.phase] * 100}" style="width:${animateDistribution ? 0 : o[rec.phase] * 100}%"></i></div><span class="mono num">${pct(o[rec.phase])}</span></div>`).join('')}
-      ${syntheticNote('Dane syntetyczne — wyłącznie demonstracja. Brak integracji z infrastrukturą operatorów.')}
+      ${ops.map((o) => `<div class="op-row"><span>${esc(o.name)}</span><div class="op-bar"><i data-w="${o[rec.phase] * 100}" style="width:${animateDistribution ? 0 : o[rec.phase] * 100}%"></i></div><span class="mono num">${pct(o[rec.phase])}</span></div>`).join('')}
+      ${store.getState().outage === 'OPS' ? `<div style="margin-top:12px">${callout('warn', 'Brak raportów operatorów', 'Zasięg i czas dostarczenia pochodzą z ostatnich danych i modelu pokrycia — do potwierdzenia, gdy operatorzy przyślą raporty.')}</div>` : ''}
+      ${deliveryTable(rec.phase)}
+      ${store.getState().stage === 7 ? '<div class="btn-row" style="margin-top:16px"><button class="btn primary" data-action="advance">Pobierz nowe dane źródłowe (18:30)</button></div>' : ''}
     </div>
   </section>`;
+}
+
+// Czas dostarczenia per operator — pokazuje, że ludzie w tym samym powiecie dostają alert w różnym czasie.
+function deliveryTable(phase) {
+  const del = store.deliveryStats(phase);
+  return `<div class="dlv-block"><div class="stat-label" style="margin:16px 0 6px">Czas dostarczenia (symulacja)</div>
+    <table class="dlv"><thead><tr><th>Operator</th><th class="num">Mediana</th><th class="num">95% odbiorców</th></tr></thead>
+    <tbody>${del.rows.map((r) => `<tr class="${r === del.slowest && del.warn ? 'slow' : ''}"><td>${esc(r.name)}</td><td class="num">${store.fmtSec(r.p50)}</td><td class="num">${store.fmtSec(r.p95)}</td></tr>`).join('')}</tbody></table>
+    ${del.warn ? `<div style="margin-top:12px">${callout('warn', 'Nierówny czas dostarczenia', `${esc(del.slowest.name)} dociera do 95% odbiorców po <b>${store.fmtSec(del.slowest.p95)}</b>, najszybszy operator po ${store.fmtSec(del.fastest)}. Osoby w tym samym powiecie dostają alert w różnym czasie — zapisano w dzienniku do wyjaśnienia z operatorem.`)}</div>` : ''}</div>`;
+}
+
+// Inne alerty RCB w wybranych powiatach (7 dni) — przeciwdziała zmęczeniu alertami i sprzecznym komunikatom.
+function loadPanel(d) {
+  const items = store.alertLoad(d.areaIds);
+  const revoked = store.getState().revoked || [];
+  return `<div class="load-panel">${panel('Inne alerty w tych powiatach', items.length ? `<p class="muted" style="margin:0 0 10px;font-size:14px">W ostatnich 7 dniach: <b>${items.length}</b> ${items.length === 1 ? 'alert' : 'alerty'}. Kolejny komunikat trafi do tych samych osób.</p>
+    ${items.map((x) => `<div class="load-item">
+      <div><b>${esc(x.title)}</b> <span class="faint">· ${esc(x.areas.join(', '))}</span></div>
+      <div class="muted" style="font-size:13px;margin-top:2px">${x.active ? `Alert aktywny od ${esc(x.since)}` : 'Alert zakończony'}${x.note ? ` · ${esc(x.note)}` : ''}</div>
+      ${x.active && !revoked.includes(x.id) ? `<button class="btn sm" style="margin-top:8px" data-revoke="${esc(x.id)}">Zaplanuj odwołanie</button>` : ''}
+    </div>`).join('')}` : '<p class="muted" style="margin:0;font-size:14px">Brak innych alertów w tych powiatach w ostatnich 7 dniach.</p>')}</div>`;
 }
 
 function areaPicker(d) {
@@ -159,16 +183,23 @@ function areaPicker(d) {
       <span>${esc(f.properties.label)}</span>
       <span class="exp">${f.properties.exposure[phase] ? `${pct(f.properties.exposure[phase])} w strefie` : '—'}</span>
     </label>`).join('')}
-  </div><div class="faint" style="font-size:12px;margin-top:8px">Najmniejszy obszar dystrybucji: powiat. % — udział populacji w strefie zagrożenia (synt.).</div>`);
+  </div><div class="faint" style="font-size:13px;margin-top:8px">% to udział populacji powiatu w strefie zagrożenia. <a href="#/map">Pokaż na mapie</a></div>`);
+}
+
+// Etapy tworzenia alertu — pokazują dyżurnemu, na którym kroku jest.
+function steps(d, sentRec) {
+  const at = sentRec ? 4 : d.status === 'review' ? 3 : d.analysis ? 2 : 1;
+  return `<ol class="wr-steps">${['Treść', 'Ocena jakości', 'Zatwierdzenie', 'Wysyłka (symulacja)']
+    .map((l, i) => `<li class="${i + 1 < at || (sentRec && i === 3) ? 'done' : i + 1 === at ? 'current' : ''}"><span>${i + 1}</span>${l}</li>`).join('')}</ol>`;
 }
 
 function otherDrafts() {
   const data = store.getData();
   const rows = data.alerts.filter((a) => a.eventId !== data.meta.mainEventId);
-  return panel('Kolejka komunikatów — pozostałe zdarzenia', `<div class="table-wrap"><table>
-    <thead><tr><th>ID</th><th>Zdarzenie</th><th>Treść</th><th>Status</th></tr></thead>
-    <tbody>${rows.map((a) => `<tr><td class="mono faint">${esc(a.id)}</td><td>${esc(data.events.find((e) => e.id === a.eventId).title)}</td>
-      <td class="mono" style="font-size:12.5px">${esc(a.text)}</td>
+  return panel('Komunikaty dla pozostałych zdarzeń', `<div class="table-wrap"><table>
+    <thead><tr><th>Zdarzenie</th><th>Treść</th><th>Status</th></tr></thead>
+    <tbody>${rows.map((a) => `<tr><td><b>${esc(data.events.find((e) => e.id === a.eventId).title)}</b></td>
+      <td style="font-size:13.5px">${esc(a.text)}</td>
       <td>${a.status === 'sent' ? tag(`Wysłany ${a.sentAt}`, 'green') : tag('Projekt', 'cyan')}</td></tr>`).join('')}</tbody>
   </table></div>`, { bodyClass: 'tight' });
 }
@@ -194,7 +225,7 @@ export function render() {
   const canSubmit = editable && d.analysis && !d.analysis.blocking && d.analyzedText === d.text;
   const variants = data.testVariants;
 
-  const editor = panel(`Projekt alertu · ${d.id} · ${isUpdate ? 'Aktualizacja' : 'Alert pierwotny'}`, `
+  const editor = panel(isUpdate ? 'Treść aktualizacji' : 'Treść alertu', `
     ${isUpdate && prevSent ? `<div style="margin-bottom:12px">${callout('info', `Aktualizacja alertu ${prevSent.id}`, `Zmiany względem wysłanej wersji:<br><span class="mono" style="font-size:12.5px">${wordDiff(prevSent.text, d.text)}</span>`)}</div>` : ''}
     <textarea class="sms-editor" id="sms" spellcheck="false" aria-label="Treść alertu" ${editable ? '' : 'disabled'}>${esc(d.text)}</textarea>
     ${charRow(d.text)}
@@ -202,16 +233,16 @@ export function render() {
       <button class="btn primary" data-act="analyze" ${editable && !busy ? '' : 'disabled'}>Analizuj</button>
       <button class="btn approve" data-act="submit" ${canSubmit ? '' : 'disabled'} title="${d.analysis?.blocking ? 'Błąd blokujący — popraw komunikat' : !d.analysis ? 'Najpierw wykonaj analizę' : ''}">Przekaż do zatwierdzenia →</button>
       <span style="flex:1"></span>
-      ${editable ? `<select id="variant" aria-label="Wariant testowy" style="padding:8px 10px;background:var(--panel-2);border:1px solid var(--line-strong);border-radius:3px">
-        <option value="">Wariant testowy (stany błędów)…</option>
+      ${editable ? `<select id="variant" class="variant-select" aria-label="Wariant testowy">
+        <option value="">Przykłady błędów…</option>
         ${variants.map((v) => `<option value="${v.id}">${esc(v.label)}</option>`).join('')}
         <option value="__draft">Przywróć projekt wyjściowy</option>
       </select>` : ''}
     </div>
-    <div class="faint" style="font-size:12px;margin-top:10px">Generowanie rekomendacji → przegląd → zatwierdzenie przez operatora. SIGNAL nie wysyła komunikatów samodzielnie.</div>
-  `, { right: tag(d.status === 'sent' ? 'Wysłany (symulacja)' : d.status === 'review' ? 'Do zatwierdzenia' : d.analysis ? 'Przeanalizowany' : 'Projekt', d.status === 'sent' ? 'green' : d.status === 'review' ? 'amber' : 'cyan') });
+  `, { right: `<span class="mono faint" style="font-size:12.5px">${esc(d.id)}</span>` + tag(d.status === 'sent' ? 'Wysłany (symulacja)' : d.status === 'review' ? 'Do zatwierdzenia' : d.analysis ? 'Przeanalizowany' : 'Projekt', d.status === 'sent' ? 'green' : d.status === 'review' ? 'amber' : 'cyan') });
 
-  return `${pageHead('04 Alerty', 'SIGNAL WRITER', isUpdate ? 'Aktualizacja alertu' : 'Przygotowanie komunikatu', `Zdarzenie <a href="#/events/${esc(d.eventId)}">${esc(d.eventId)}</a> · kontrola jakości komunikatu, nie generator tekstu`)}
+  return `${pageHead('04 Alerty', 'SIGNAL WRITER', isUpdate ? 'Aktualizacja alertu' : 'Nowy alert', `Zdarzenie <a href="#/events/${esc(d.eventId)}">${esc(d.eventId)}</a>`)}
+    ${steps(d, sentRec)}
     <div class="grid g-main-side">
       <div class="stack">
         ${editor}
@@ -220,13 +251,12 @@ export function render() {
         ${qualityPanel(d)}
       </div>
       <div class="stack">
-        ${panel('Podgląd u odbiorcy', phonePreview(d.text))}
+        ${panel('Tak zobaczy to odbiorca', phonePreview(d.text))}
         ${areaPicker(d)}
-        ${geoPanel(d.areaIds, { title: 'Walidacja obszaru — SIGNAL GEO' })}
-        <section class="panel"><header class="panel-head"><h2>Obszar na mapie</h2><a class="mono" style="font-size:11px" href="#/map">PEŁNA MAPA →</a></header><div class="map-wrap">${mapSvg({ compact: true })}</div></section>
+        ${loadPanel(d)}
+        ${geoPanel(d.areaIds)}
       </div>
-    </div>
-    <div style="margin-top:16px">${otherDrafts()}</div>`;
+    </div>`;
 }
 
 async function runAnalyzeSequence(ctx) {
@@ -246,7 +276,7 @@ async function runAnalyzeSequence(ctx) {
   pendingAnim = { from: 0 };
   scrollTarget = '#quality-anchor';
   const result = store.runAnalysis();
-  store.toast(`ANALIZA ZAKOŃCZONA — wynik ${result.score}/100, ${result.issues.length} uwag(i).`, result.blocking ? 'error' : result.score >= 90 ? 'ok' : 'warn');
+  store.toast(`Analiza zakończona: wynik ${result.score}/100, uwagi: ${result.issues.length}.`, result.blocking ? 'error' : result.score >= 90 ? 'ok' : 'warn');
   // Opinia doradcza LLM (jeśli skonfigurowano) — nie zmienia wyniku.
   const full = await analyze(text, store.analysisContext(d));
   if (full.advisory) { advisory[d.id] = full.advisory; ctx.refresh(); }
@@ -260,11 +290,11 @@ async function runApproveSequence(why, ctx) {
     <header class="panel-head"><h2>Symulowana wysyłka</h2>${tag('Środowisko demonstracyjne', 'amber')}</header>
     <div class="panel-body">
       <div class="pipeline">${labels.map((l, i) => `<div class="p-step" data-i="${i}">${l}</div>`).join('')}</div>
-      <div class="mono" id="pipe-msg" style="font-size:13px;color:var(--accent)">WALIDACJA…</div>
+      <div id="pipe-msg" style="font-size:14px;font-weight:600;color:var(--accent)">Walidacja…</div>
       <div class="faint" style="font-size:12px">Żadna wiadomość nie jest wysyłana do rzeczywistych odbiorców.</div>
     </div></div>`;
   document.body.appendChild(overlay);
-  const msgs = ['WALIDACJA…', 'ZATWIERDZONO — decyzja zapisana w dzienniku', 'DYSTRYBUCJA ZAINICJOWANA (symulacja)', 'SYMULOWANE DOSTARCZENIE ZAKOŃCZONE'];
+  const msgs = ['Walidacja…', 'Zatwierdzono, decyzja zapisana w dzienniku', 'Dystrybucja zainicjowana (symulacja)', 'Symulowane dostarczenie zakończone'];
   for (let i = 0; i < labels.length; i++) {
     const el = overlay.querySelector(`[data-i="${i}"]`);
     el.classList.add('run');
@@ -293,7 +323,7 @@ export function mount(root, ctx) {
     const n = [...ta.value].length;
     const over = n > SMS_LIMIT;
     const counter = root.querySelector('[data-chars]');
-    counter.textContent = `ZNAKI: ${n} / ${SMS_LIMIT}`;
+    counter.textContent = `${n} / ${SMS_LIMIT} znaków`;
     counter.classList.toggle('over', over);
     const meter = root.querySelector('.char-meter');
     meter.classList.toggle('over', over);
@@ -327,6 +357,10 @@ export function mount(root, ctx) {
     }
   });
   root.querySelectorAll('[data-area]').forEach((el) => el.addEventListener('change', () => store.toggleDraftArea(el.dataset.area)));
+  root.querySelectorAll('[data-revoke]').forEach((el) => el.addEventListener('click', () => {
+    store.revokeAlert(el.dataset.revoke);
+    store.toast('Odwołanie alertu zaplanowane i zapisane w dzienniku.', 'ok');
+  }));
 
   // Zatwierdzanie
   const confirmBox = root.querySelector('#confirm');

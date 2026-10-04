@@ -1,0 +1,14 @@
+{
+  "source": "Treści Alertów RCB przytoczone w haśle „Alert RCB” w polskiej Wikipedii (pl.wikipedia.org/wiki/Alert_RCB, wersja z 4.10.2026), z przypisami do mediów i komunikatów RCB.",
+  "alerts": [
+    {"date": "2020-06-15", "area": "Gdynia, Gdańsk, Sopot, pow. pucki", "text": "Uwaga!Jutro neutralizacja miny morskiej w Gdyni.Od 8.00 do 15.00 na odcinku Rewa-Westerplatte bedzie obowiazywal zakaz zblizania sie do plazy."},
+    {"date": "2020-07-23", "area": "pow. wielicki", "text": "Uwaga! Skaznie wody bakteria Coli w Wodociagu Wieliczka. Woda nie nadaje sie do spozycia, przygotywywania napojow i potraw, mycia owocow i warzyw. Sledz komunikaty Sanepidu."},
+    {"date": "2020-10-13", "area": "Świnoujście", "text": "Uwaga!Dzisiaj (13.10) ok.godz.13:00 wojsko zneutralizuje niewybuch na Kanale Piastowskim.Nie zblizaj sie do rz.Swiny na 3000m. Sluchaj polecen sluzb."},
+    {"date": "2021-07-10", "area": "woj. świętokrzyskie, śląskie, łódzkie", "text": "Uwaga! Niebezpieczny przestepca! Wiecej: https://slaska.policja.gov.pl/kat/informacje/wiadomosci/315614,Poszukujemy-Jacka-Jaworka-podejrzanego-o-zabojstwo.html"},
+    {"date": "2022-01-11", "area": "pow. otwocki, garwoliński, kozienicki i inne", "text": "Uwaga! Nowe przypadki wscieklizny. Utrzymuj zwierzeta domowe i gospodarskie w zamknieciu. Zaszczep psy i koty przeciwko wsciekliznie."},
+    {"date": "2023-05-13", "area": "woj. kujawsko-pomorskie, pomorskie, zachodniopomorskie", "text": "Uwaga! Trwaja poszukiwania obiektu powietrznego przypominajacego balon. W przypadku jego znalezienia nie podnos, powiadom najblizszy posterunek Policji."},
+    {"date": "2024-05-10", "area": "Siemianowice Śląskie i okolice", "text": "Uwaga! Pozar substancji chemicznych w Siemianowicach Slaskich. Nie zblizaj sie do miejsca pozaru. Jesli mozesz, zostan w domu i zamknij okna."},
+    {"date": "2024-05-12", "area": "Warszawa i okoliczne powiaty", "text": "Uwaga! Pozar hali targowej na ul. Marywilskiej 44 w Warszawie. Nie zblizaj sie do miejsca pozaru. Jeśli mozesz, zostan w domu i zamknij okna."},
+    {"date": "2026-06-27", "area": "pow. białostocki", "text": "Uwaga! Woda z wodociagu Grabowka niezdatna do spozycia i mycia. Moze byc uzywana wylacznie do celow gospodarczych. Sledz komunikaty urzedu Gminy Grabowka."}
+  ]
+}

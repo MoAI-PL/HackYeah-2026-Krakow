@@ -1,6 +1,6 @@
 # RCB SIGNAL — scenariusz prezentacji (3–5 min)
 
-**Przed prezentacją:** `python3 server.py`, otwórz http://localhost:8080 w trybie pełnoekranowym (F11) i kliknij **RESET DEMO**. Pasek prezentera na dole zawsze pokazuje następny krok, a przycisk **Przejdź →** otwiera właściwy ekran.
+**Przed prezentacją:** `python3 server.py`, otwórz http://localhost:8080 w trybie pełnoekranowym (F11) Pasek prezentera jest domyślnie ukryty — klawisz **P** pokazuje go i chowa. Na pasku: **Reset demo**, podpowiedź następnego kroku i przycisk **Przejdź →**, który otwiera właściwy ekran. Przed startem naciśnij P → **Reset demo** → P.
 
 ---
 
@@ -16,19 +16,21 @@ Kliknij **▶ START DEMO**.
 
 > „W ciągu 11 minut przychodzą trzy meldunki: IMGW, PSP i WCZK. SIGNAL wykrywa, że dotyczą tego samego zdarzenia.”
 
-Wskaż kartę **INTENSYWNE OPADY / PODTOPIENIA** i liczniki (12 aktywnych, 4 do weryfikacji).
+Wskaż kartę **Intensywne opady / podtopienia** i liczniki (7 aktywnych, 3 do weryfikacji). Opcjonalnie w panelu **Stan źródeł danych** kliknij **Symuluj awarię** przy IMGW — nagłówek pokazuje 4/5, na karcie zdarzenia pojawia się „Ocena niepełna” z procedurą zastępczą; potem **Przywróć**.
 
 ### 2. Jeden obraz sytuacji (30 s) — kliknij kartę zdarzenia
 
 - oś czasu 17:42 → 17:56, **status ZWERYFIKOWANE: 3 niezależne źródła uprawnione**;
+- ramka **Dlaczego te meldunki to jedno zdarzenie** — wynik reguł z `correlate.js` (powiat, zagrożenie, okno czasowe, służby);
 - panel **Analiza SIGNAL** (✓ wiele źródeł, ✓ korelacja czasowa, ✓ pokrycie geograficzne, ⚠ intensywność rośnie);
-- przewiń do źródła **MEDIA — „zerwany most w Lipnicy”**:
+- panel **Możliwy duplikat** (EVT-2026-1037, Dunajec): kliknij **To osobne zdarzenie** — SIGNAL nie łączy zdarzeń sam, decyzja trafia do dziennika;
+- przewiń do źródła **MEDIA — „zerwany most w Mszanie Dolnej”**:
 
 > „Informacja niezweryfikowana nie staje się faktem. SIGNAL ją oznacza i wyłącza z oceny.”
 
 ### 3. Sprawdzamy obszar (20 s) — 03 Mapa
 
-Czerwony obszar to strefa zagrożenia, niebieskie punkty to zgłoszenia. Kliknij m. Nadrzecze, żeby pokazać ryzyko, zgłoszenia i populację.
+Mapa pokazuje prawdziwe granice powiatów (Nowy Sącz, Dunajec); obok mapa Polski z zaznaczonym regionem. Czerwony obszar to strefa zagrożenia, niebieskie punkty to zgłoszenia. Kliknij m. Nowy Sącz, żeby pokazać ryzyko, zgłoszenia i populację.
 
 > „Najmniejszą jednostką dystrybucji jest powiat, więc porównujemy obszar zagrożenia z obszarem, który faktycznie dostanie alert.”
 
@@ -54,27 +56,29 @@ W panelu **Rekomendacja SIGNAL** widać zmiany. Kliknij **Zastosuj rekomendację
 
 > „AI rekomenduje, człowiek decyduje. Operator potwierdza i podaje uzasadnienie, a wszystko trafia do dziennika audytu.”
 
-Zaznacz potwierdzenie → **Zatwierdź i symuluj wysyłkę** → zasięg 92% (operatorzy A/B/C).
+Opcjonalnie w panelu **Inne alerty w tych powiatach**: Nowy Sącz ma już aktywny alert o zanieczyszczeniu powietrza → **Zaplanuj odwołanie** (mniej równoległych alertów = mniej zmęczenia alertami).
+
+Zaznacz potwierdzenie → **Zatwierdź i symuluj wysyłkę** → zasięg 92% (operatorzy A/B/C). Pod spodem **Czas dostarczenia**: Operator C dociera do 95% odbiorców po 5 min 30 s, pozostali do 2 min 20 s — „ludzie w tym samym powiecie dostają alert w różnym czasie; SIGNAL to wykrywa i zapisuje”.
 
 ### 7. Sytuacja się zmienia (30 s)
 
-Na pasku prezentera kliknij **Następny etap scenariusza ⏭** (18:30).
+W panelu wysyłki (albo na karcie zdarzenia) kliknij **Pobierz nowe dane źródłowe (18:30)**.
 
-> „PSP: +8 interwencji, w tym w powiecie lipnickim. IMGW wydłuża ostrzeżenie do 23:00. SIGNAL wykrywa, że wysłany alert nie opisuje już sytuacji: pokrycie spadło do 83%, a godzina jest nieaktualna.”
+> „PSP: +8 interwencji, w tym w powiecie limanowskim. IMGW wydłuża ostrzeżenie do 23:00. SIGNAL wykrywa, że wysłany alert nie opisuje już sytuacji: pokrycie spadło do 83%, a godzina jest nieaktualna.”
 
 Opcjonalnie pokaż na mapie rozszerzoną strefę.
 
 ### 8. Aktualizacja (25 s)
 
-**Otwórz proces aktualizacji**: diff względem wysłanej wersji, dodany pow. lipnicki, „Do 23:00”. **ANALIZUJ** (92) → **Przekaż do zatwierdzenia** → potwierdzenie → **Zatwierdź**.
+**Otwórz proces aktualizacji**: diff względem wysłanej wersji, dodany pow. limanowski, „Do 23:00”. **ANALIZUJ** (92) → **Przekaż do zatwierdzenia** → potwierdzenie → **Zatwierdź**.
 
 ### 9. Pętla się zamyka (30 s)
 
-Na zdarzeniu kliknij **Zamknij zdarzenie**, potem **Raport po zdarzeniu (AAR)**.
+Na zdarzeniu kliknij **Zamknij zdarzenie**, potem **Raport po zdarzeniu (AAR)**. Na dole raportu: **Podsumowanie dla mieszkańców** — tekst dla samorządu i gov.pl: co się stało i dlaczego wysłano alert.
 
 > „Czas do decyzji 13 minut, jakość 78 → 92, jedna aktualizacja, cztery wykryte problemy i rekomendacje na przyszłość.”
 
-Na koniec **05 Analityka** (baseline vs SIGNAL, oznaczone jako demo benchmark) i **07 Dziennik audytu**.
+Na koniec **Analityka** (cele pilotażu, **test historyczny na 9 prawdziwych Alertach RCB** i baseline vs SIGNAL) i **Dziennik audytu** (podsumowanie decyzji, eksport CSV).
 
 > **„I właśnie w ten sposób każdy alert staje się informacją, która pomaga przygotować następny lepiej.”**
 
@@ -92,5 +96,5 @@ Na koniec **05 Analityka** (baseline vs SIGNAL, oznaczone jako demo benchmark) i
 ## Awaryjnie
 
 - Odświeżenie strony nie traci stanu (zapis w przeglądarce).
-- Zagubiony krok: przycisk **Przejdź →** na pasku prezentera.
-- Pełny restart: **RESET DEMO**.
+- Zagubiony krok: klawisz **P** → przycisk **Przejdź →** na pasku prezentera.
+- Pełny restart: klawisz **P** → **Reset demo**.
