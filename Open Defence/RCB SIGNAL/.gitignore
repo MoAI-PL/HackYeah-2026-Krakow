@@ -1,1 +1,9 @@
 dist/
+
+# Notatki wewnętrzne zespołu (zostają lokalnie, poza repozytorium)
+CLAUDE.md
+DEMO_SCRIPT.md
+OBRONA.md
+PITCH.md
+SUBMISSION.md
+__pycache__/

@@ -35,7 +35,7 @@ python build_static.py        # tworzy folder dist/ (web + data, ok. 0,4 MB)
 python -m http.server 8000 --directory dist   # podgląd: http://localhost:8000
 ```
 
-Folder `dist/` można opublikować na GitHub Pages (wymaga publicznego repo), przez Netlify Drop (przeciągnięcie folderu) albo na dowolnym hostingu plików. W wersji statycznej opcjonalny doradczy LLM jest niedostępny — ocena działa na silniku regułowym.
+Folder `dist/` zawiera też `README.md` z konfiguracją Hugging Face Spaces (SDK `static`), więc można go wgrać wprost do Space'a. Można go też opublikować na GitHub Pages (wymaga publicznego repo), przez Netlify Drop (przeciągnięcie folderu) albo na dowolnym hostingu plików. W wersji statycznej opcjonalny doradczy LLM jest niedostępny — ocena działa na silniku regułowym.
 
 ## Co pokazuje demo
 
@@ -53,7 +53,7 @@ Jeden kompletny scenariusz end-to-end: **„Intensywne opady / podtopienia”** 
 
 Scenariusz prowadzi **pasek prezentera** (domyślnie ukryty, klawisz `P`): pokazuje bieżący krok (0–12), podpowiedź, skrót „Przejdź →” i „Reset demo”. System nie przeskakuje etapów samodzielnie.
 
-Scenariusz krok po kroku opisuje [DEMO_SCRIPT.md](DEMO_SCRIPT.md), a architekturę [ARCHITECTURE.md](ARCHITECTURE.md).
+Szybki test demo krok po kroku (PL/EN) opisuje [INSTRUKCJA_JURY.md](INSTRUKCJA_JURY.md), a architekturę [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Stany błędów
 

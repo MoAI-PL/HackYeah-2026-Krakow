@@ -105,7 +105,7 @@ Docelowo w ten sam sposób można podłączyć rzeczywiste źródła (IMGW, PSP,
 ## Bezpieczeństwo
 
 - Brak kodu wysyłki: serwer nie ma żadnego endpointu dystrybucji, a `/api/health` raportuje `realDistribution: false`.
-- Pasek klasyfikacji „ŚRODOWISKO DEMONSTRACYJNE — DANE SYNTETYCZNE” jest widoczny na każdym ekranie i na wydruku raportu.
+- Wysyłka i dystrybucja są zawsze oznaczone w interfejsie jako symulacja; fikcyjność danych opisują README, prezentacja i instrukcja dla jury.
 - Rola operatora jest stała (`OP-07`). Uwierzytelnianie i role to element wdrożenia produkcyjnego (poza zakresem MVP).
 - Wszystkie treści z danych są escapowane przed wstawieniem do DOM (`esc()`).
 

@@ -18,6 +18,25 @@ if DIST.exists():
 shutil.copytree(ROOT / "web", DIST)
 shutil.copytree(ROOT / "data", DIST / "data")
 (DIST / ".nojekyll").write_text("")  # GitHub Pages: nie przetwarzaj plików przez Jekyll
+# Hugging Face Spaces (SDK „static”): konfiguracja Space'a w nagłówku README.md
+(DIST / "README.md").write_text("""---
+title: RCB SIGNAL
+emoji: 🛡️
+colorFrom: indigo
+colorTo: pink
+sdk: static
+app_file: index.html
+pinned: false
+short_description: Wspomaganie decyzji dla dyżurnego RCB (demo)
+---
+
+# RCB SIGNAL — od alertu do działania
+
+Demo systemu wspomagania decyzji dla dyżurnego RCB (HackYeah 2026, Open Task Defence, zespół MoAI).
+Kliknij **▶ START DEMO** i przejdź scenariusz. Dane i zdarzenia są fikcyjne; wysyłka alertu jest tylko symulowana.
+
+Kod źródłowy: https://github.com/MoAI-PL/HackYeah-2026-Krakow (folder `Open Defence/RCB SIGNAL`).
+""", encoding="utf-8")
 
 files = [p for p in DIST.rglob("*") if p.is_file()]
 size = sum(p.stat().st_size for p in files) / 1e6

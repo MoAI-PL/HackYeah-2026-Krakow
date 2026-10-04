@@ -59,6 +59,23 @@
 
   .kicker { font: 700 14px/1 "Roboto Mono", monospace; letter-spacing: 0.16em; color: #6b1ff0; margin-bottom: 14px; position: relative; z-index: 3; }
   .card { position: absolute; background: #fff; border-radius: 14px; box-shadow: 0 8px 26px rgba(30, 10, 90, 0.16); overflow: hidden; z-index: 3; }
+
+  /* slajd 10: mini-profile LinkedIn i źródła */
+  .li { position: relative; width: 216px; height: 262px; background: #fff; border-radius: 12px; box-shadow: 0 8px 26px rgba(30, 10, 90, 0.16); overflow: hidden; }
+  .li .ban { height: 58px; background: #141418; position: relative; }
+  .li .ban.moai::before { content: "MoAI"; position: absolute; right: 52px; top: 13px; color: #fff; font: 700 22px/1 "Hind", sans-serif; letter-spacing: -0.01em; }
+  .li .ban.moai::after { content: ""; position: absolute; right: 10px; top: 8px; width: 38px; height: 38px; border-radius: 50%; background: radial-gradient(circle at 70% 30%, #c4505e, #8f3a4d); opacity: .95; }
+  .li .ban.grey { background: linear-gradient(90deg, #a3b2b5 0 62%, #d7e1e3 62% 70%, #c3d2d6 70%); }
+  .li img { position: absolute; left: 14px; top: 18px; width: 78px; height: 78px; border-radius: 50%; border: 4px solid #fff; object-fit: cover; background: #fff; }
+  .li .bd { padding: 44px 14px 0; }
+  .li .nm { font-size: 17.5px; font-weight: 600; line-height: 1.15; }
+  .li .hl { font-size: 12.5px; line-height: 1.32; margin-top: 5px; color: #191919; }
+  .li .org { font-size: 12px; line-height: 1.3; margin-top: 6px; font-weight: 500; }
+  .li .loc { font-size: 11.5px; color: #666; margin-top: 2px; }
+  .li .in { position: absolute; right: 12px; bottom: 10px; width: 18px; height: 18px; border-radius: 3px; background: #0a66c2; color: #fff; font: 700 12px/18px "Hind", sans-serif; text-align: center; }
+  .bib { font-size: 11.6px; line-height: 1.36; color: #1a1a1a; margin: 0; padding-left: 22px; }
+  .bib li { margin-bottom: 2px; }
+  .bib li::marker { font: 700 11px "Roboto Mono", monospace; color: #6b1ff0; }
 </style>
 </head>
 <body>
@@ -345,28 +362,43 @@
   </div>
 </section>
 
-<!-- ============================================================ 10. FIN -->
+<!-- ============================================================ 10. ZESPÓŁ I ŹRÓDŁA -->
 <section class="slide">
-  <svg class="blob" style="left:60px;top:20px;width:300px;height:300px"><use href="#b1" fill="url(#gBlue)"/></svg>
-  <svg class="blob" style="left:520px;top:-150px;width:340px;height:300px"><use href="#b2" fill="url(#gBlue2)"/></svg>
-  <svg class="blob" style="right:180px;top:70px;width:90px;height:90px"><use href="#b2" fill="url(#gBlue2)"/></svg>
-  <svg class="blob" style="right:-120px;top:-40px;width:330px;height:380px"><use href="#b1" fill="url(#gPink)"/></svg>
-  <svg class="blob" style="left:-80px;bottom:-110px;width:520px;height:300px"><use href="#b4" fill="url(#gBlue)" transform="scale(-1,1) translate(-520,0)"/></svg>
-  <svg class="blob" style="right:-60px;bottom:-120px;width:520px;height:330px"><use href="#b4" fill="url(#gBlue2)"/></svg>
-  <svg class="blob" style="left:720px;bottom:40px;width:90px;height:90px"><use href="#b1" fill="url(#gPink)"/></svg>
-  <div class="content" style="left:0;right:0;top:178px;text-align:center"><h1 style="font-size:72px">Fin!</h1></div>
-  <!-- karty zespołu -->
-  <div class="content" style="left:120px;right:120px;top:300px;display:flex;justify-content:center;gap:18px">
-    <!-- generowane ręcznie: 5 kart -->
-    <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#1200ff,#ff5c7c);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">JD</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Jan Domański</div></div></div>
-    <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#6b1ff0,#ff6b8b);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">JG</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Jakub Goleman</div></div></div>
-    <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#b52cd9,#ff4f7b);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">KG</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Krystian Góźdź</div></div></div>
-    <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#d1004a,#9b5cff);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">MK</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Maks Kozieł</div></div></div>
-    <div class="card" style="position:relative;width:196px;height:162px"><div style="height:62px;background:#141418"><span class="mono" style="position:absolute;right:12px;top:14px;color:#fff;font-weight:700;font-size:22px">MoAI</span></div><div style="position:absolute;left:16px;top:28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#2a00ff,#b52cd9);border:4px solid #fff;display:grid;place-items:center;color:#fff;font:700 22px 'Roboto Mono'">PN</div><div style="padding:46px 16px 0"><div style="font-size:19px;font-weight:600">Piotr Niemiec</div></div></div>
+  <svg class="blob" style="right:-120px;top:-90px;width:330px;height:300px"><use href="#b1" fill="url(#gPink)"/></svg>
+  <svg class="blob" style="right:170px;top:24px;width:70px;height:70px"><use href="#b2" fill="url(#gBlue2)"/></svg>
+  <div class="wash" style="left:-220px;bottom:-280px;width:640px;height:520px;background:radial-gradient(closest-side, rgba(90,70,255,.35), transparent)"></div>
+  <div class="logo"><svg width="40" height="44"><use href="#logo"/></svg>RCB SIGNAL</div>
+  <div class="rule" style="left:72px;top:76px;width:1000px"></div>
+  <div class="content" style="left:72px;top:96px;width:1000px;display:flex;justify-content:space-between;align-items:flex-end">
+    <div><div class="kicker">ZESPÓŁ MoAI</div><h1 style="font-size:46px">Fin! Dziękujemy</h1></div>
+    <p class="body" style="font-size:16px;text-align:right;max-width:430px"><b>Następny krok:</b> pilotaż obserwacyjny z RCB i jednym WCZK — wdrożenie lokalne, bez chmury.</p>
   </div>
-  <div class="content" style="left:120px;right:120px;top:482px;text-align:center"><p class="body" style="font-size:19px"><b>Następny krok:</b> pilotaż obserwacyjny z RCB i jednym WCZK — wdrożenie lokalne, bez chmury, działa offline.</p></div>
-  <div class="content" style="left:200px;right:200px;top:536px;text-align:center;background:rgba(255,255,255,.85);border-radius:10px;padding:10px 14px">
-    <p class="small" style="font-size:13.5px;color:#222">Stos: Python (biblioteka standardowa) + JavaScript, bez zależności, działa offline. Granice powiatów: PRG (GUGiK, przez ppatrzyk/polska-geojson, MIT); zdarzenia i dane w demo są fikcyjne; test historyczny na treściach Alertów RCB z Wikipedii.<br>Wykorzystanie AI: Claude (Anthropic) wspierał tworzenie kodu, dokumentacji i prezentacji; opcjonalny moduł LLM w aplikacji ma rolę doradczą.</p>
+  <div class="content" style="left:72px;top:196px;width:1136px;display:flex;justify-content:space-between">
+    <div class="li"><div class="ban moai"></div><img src="img/team/domanski.jpg" alt=""><div class="bd"><div class="nm">Jan Domański</div><div class="hl">Business Analyst | AI in Business at Lublin University of Technology</div><div class="org">Sollers Consulting · Politechnika Lubelska</div><div class="loc">Polska</div></div><span class="in">in</span></div>
+    <div class="li"><div class="ban moai"></div><img src="img/team/goleman.jpg" alt=""><div class="bd"><div class="nm">Jakub Goleman</div><div class="hl">Samorząd Studencki Politechniki Lubelskiej</div><div class="org">MoAI · Politechnika Lubelska</div><div class="loc">Lublin</div></div><span class="in">in</span></div>
+    <div class="li"><div class="ban grey"></div><img src="img/team/gozdz.jpg" alt=""><div class="bd"><div class="nm">Krystian Góźdź</div><div class="hl">Platform Engineer | Real-time Systems, Traffic Engineering &amp; High-Availability (HA, Observability, Automation)</div><div class="org">gozd.eu · Politechnika Lubelska</div><div class="loc">Lublin</div></div><span class="in">in</span></div>
+    <div class="li"><div class="ban moai"></div><img src="img/team/koziel.jpg" alt=""><div class="bd"><div class="nm">Maks Kozieł</div><div class="org">MoAI · Politechnika Lubelska</div><div class="loc">Lublin</div></div><span class="in">in</span></div>
+    <div class="li"><div class="ban moai"></div><img src="img/team/niemiec.jpg" alt=""><div class="bd"><div class="nm">Piotr Niemiec</div><div class="hl">Business Applications of Artificial Intelligence | Lublin University of Technology</div><div class="org">MoAI · Politechnika Lubelska</div><div class="loc">Lublin</div></div><span class="in">in</span></div>
+  </div>
+  <div class="content" style="left:72px;top:476px;width:1136px">
+    <div class="mono" style="font-size:12.5px;letter-spacing:.08em;margin-bottom:6px;border-top:2px solid #111;padding-top:8px">ŹRÓDŁA I PODZIĘKOWANIA</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+      <ol class="bib">
+        <li>RCB — Alert RCB: opis, pytania i odpowiedzi, przykładowe SMS. gov.pl/web/rcb/alertrcb</li>
+        <li>„Alert RCB”, Wikipedia (pl), wersja z 4.10.2026 — treści 9 alertów do testu historycznego</li>
+        <li>Ustawa z 26 kwietnia 2007 r. o zarządzaniu kryzysowym (Dz.U. 2007 nr 89 poz. 590 ze zm.), art. 10–11</li>
+        <li>Dyrektywa (UE) 2018/1972 — Europejski kodeks łączności elektronicznej, art. 110: publiczny system ostrzegania</li>
+        <li>ETSI TS 102 900 — European Public Warning System (EU-Alert) w Cell Broadcast</li>
+      </ol>
+      <ol class="bib" start="6">
+        <li>3GPP TS 23.038 — alfabet GSM-7 (limit 160 znaków SMS)</li>
+        <li>D.S. Mileti, J.H. Sorensen, <i>Communication of Emergency Public Warnings</i>, ORNL-6609, 1990</li>
+        <li>OWASP Top 10 for LLM Applications 2025 — LLM01: Prompt Injection</li>
+        <li>Granice powiatów: Państwowy Rejestr Granic (GUGiK, geoportal.gov.pl); uproszczenie: ppatrzyk/polska-geojson (MIT)</li>
+        <li>Fonty Roboto Mono i Hind (Google Fonts, OFL) · lektor filmu: Microsoft Paulina</li>
+      </ol>
+    </div>
+    <p class="small" style="font-size:12px;color:#222;margin-top:6px;padding:7px 12px;background:rgba(107,31,240,.07);border-left:4px solid #6b1ff0"><b>Wykorzystanie AI:</b> Claude (Anthropic) wspierał tworzenie kodu, dokumentacji i prezentacji; opcjonalny moduł LLM w aplikacji ma wyłącznie rolę doradczą. Zdarzenia i dane w demo są fikcyjne. Stos: Python + JavaScript, bez zależności, działa offline.</p>
   </div>
 </section>
 
